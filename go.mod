@@ -1,1 +1,1 @@
-module "nscript"
+module github.com/smartwalle/nscript
