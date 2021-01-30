@@ -58,6 +58,7 @@ func Load(r io.Reader) (*Script, error) {
 	return script, nil
 }
 
+// ExpandScript 处理 #INSERT 语句和 #INCLUDE 语句
 func ExpandScript(lines []string) ([]string, error) {
 	var nLines []string
 	for _, line := range lines {
@@ -80,7 +81,7 @@ func ExpandScript(lines []string) ([]string, error) {
 				continue
 			} else if strings.HasPrefix(line, KeyWordInclude) {
 				var match = regexInclude.FindStringSubmatch(line)
-				var insertLines, err = LoadPage(match[1], match[2])
+				var insertLines, err = Include(match[1], match[2])
 				if err != nil {
 					return nil, err
 				}
@@ -112,13 +113,14 @@ func Read(r io.Reader) []string {
 	return lines
 }
 
-func LoadPage(file, page string) ([]string, error) {
+// Include 读取指定文件中的指定片断
+func Include(file, key string) ([]string, error) {
 	var lines, err = ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
 
-	page = "[" + page + "]"
+	key = "[" + key + "]"
 
 	var stat = 0
 
@@ -129,7 +131,7 @@ func LoadPage(file, page string) ([]string, error) {
 		}
 		switch stat {
 		case 0:
-			if line[0] == '[' && strings.HasPrefix(line, page) {
+			if line[0] == '[' && strings.HasPrefix(line, key) {
 				stat = 1
 			}
 		case 1:
