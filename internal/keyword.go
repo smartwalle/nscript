@@ -7,7 +7,7 @@ const (
 	// 注释
 	KeyComment = ';'
 
-	// IF 语句
+	// IF 语句，执行判断
 	KeyIf = "#IF"
 
 	// SAY 语句，输出内容
