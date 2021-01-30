@@ -1,0 +1,17 @@
+[@MAIN]
+#IF
+CHECKGOLD > 20000
+#SAY
+太有钱了
+
+#IF
+CHECKGOLD > 10000
+#SAY
+有一定实力
+
+#IF
+CHECKGOLD > 5000
+#SAY
+好好努力
+#ELSESAY
+就这样吧

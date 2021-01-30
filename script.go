@@ -27,7 +27,7 @@ func NewScript(file string) (*Script, error) {
 			return nil, err
 		}
 
-		nScript.pages[nPage.Name] = nPage
+		nScript.pages[nPage.key] = nPage
 	}
 
 	return nScript, nil

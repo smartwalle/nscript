@@ -3,12 +3,13 @@ package nscript
 import "fmt"
 
 type Page struct {
-	Name string
+	key      string
+	segments []*Segment
 }
 
-func NewPage(name string) *Page {
+func NewPage(key string) *Page {
 	var p = &Page{}
-	p.Name = name
+	p.key = key
 	return p
 }
 

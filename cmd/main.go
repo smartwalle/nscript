@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var s, err = nscript.NewScript("./a.txt")
+	var s, err = nscript.NewScript("./if.txt")
 	if err != nil {
 		fmt.Println(err)
 		return
