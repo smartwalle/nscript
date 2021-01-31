@@ -74,13 +74,13 @@ func (this *Segment) parseCheck(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var key = strings.ToUpper(parts[0])
+	var name = strings.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
 	}
 
-	var check = NewCheck(key, params)
+	var check = NewCheck(name, params)
 	this.checks = append(this.checks, check)
 	return nil
 }
@@ -90,13 +90,13 @@ func (this *Segment) parseAction(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var key = strings.ToUpper(parts[0])
+	var name = strings.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
 	}
 
-	var action = NewAction(key, params)
+	var action = NewAction(name, params)
 	this.actions = append(this.actions, action)
 	return nil
 }
@@ -105,13 +105,13 @@ func (this *Segment) parseElseAction(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var key = strings.ToUpper(parts[0])
+	var name = strings.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
 	}
 
-	var action = NewAction(key, params)
+	var action = NewAction(name, params)
 	this.elseActions = append(this.elseActions, action)
 	return nil
 }
@@ -156,7 +156,7 @@ func (this *Segment) execElseAction(ctx Context) ([]string, string, error) {
 
 func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) ([]string, string, error) {
 	for _, action := range actions {
-		switch action.key {
+		switch action.name {
 		case internal.CmdGoto:
 			if len(action.params) < 1 {
 				return nil, "", errors.New("syntax error: invalid arg for GOTO")

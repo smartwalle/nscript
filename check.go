@@ -3,21 +3,21 @@ package nscript
 import "fmt"
 
 type Check struct {
-	key    string
+	name   string
 	params []string
 }
 
-func NewCheck(key string, params []string) *Check {
+func NewCheck(name string, params []string) *Check {
 	var c = &Check{}
-	c.key = key
+	c.name = name
 	c.params = params
 	return c
 }
 
 func (this *Check) exec(ctx Context) (bool, error) {
-	var f = GetCheckCommand(this.key)
-	if f == nil {
-		return false, fmt.Errorf("%s not found", this.key)
+	var cmd = GetCheckCommand(this.name)
+	if cmd == nil {
+		return false, fmt.Errorf("%s not found", this.name)
 	}
-	return f(this.key, ctx, this.params...)
+	return cmd(this.name, ctx, this.params...)
 }
