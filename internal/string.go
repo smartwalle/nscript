@@ -23,6 +23,12 @@ func Split(s, sep string) []string {
 	return genSplit(s, sep, 0, -1)
 }
 
+func ToUpper(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.ToUpper(s)
+	return s
+}
+
 func genSplit(s, sep string, sepSave, n int) []string {
 	if n == 0 {
 		return nil

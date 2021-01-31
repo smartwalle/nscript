@@ -51,7 +51,16 @@ func parseScript(iScript *internal.Script) (*Script, error) {
 }
 
 func (this *Script) Exec(key string, ctx Context) ([]string, error) {
-	key = strings.ToUpper(key)
+	key = internal.ToUpper(key)
+
+	// 处理默认指令
+	switch key {
+	case internal.CmdExit:
+		return nil, nil
+	case internal.CmdClose:
+		return nil, nil
+	}
+
 	var page = this.pages[key]
 	if page == nil {
 		return nil, fmt.Errorf("%s not found", key)

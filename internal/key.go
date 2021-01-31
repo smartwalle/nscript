@@ -2,7 +2,13 @@ package internal
 
 const (
 	// 脚本文件的入口函数
-	KeyMain = "[@MAIN]"
+	CmdMain = "@MAIN"
+
+	// 退出脚本
+	CmdExit = "@EXIT"
+
+	// 退出脚本
+	CmdClose = "@CLOSE"
 
 	// 注释
 	KeyComment = ';'
