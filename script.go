@@ -3,6 +3,7 @@ package nscript
 import (
 	"fmt"
 	"github.com/smartwalle/nscript/internal"
+	"io"
 	"strings"
 )
 
@@ -15,18 +16,37 @@ func NewScript(file string) (*Script, error) {
 	if err != nil {
 		return nil, err
 	}
+	return parseScript(iScript)
+}
 
-	var nScript = &Script{}
-	nScript.pages = make(map[string]*Page)
+func LoadFromFile(file string) (*Script, error) {
+	return NewScript(file)
+}
 
+func LoadFromReader(r io.Reader) (*Script, error) {
+	var iScript, err = internal.Load(r)
+	if err != nil {
+		return nil, err
+	}
+	return parseScript(iScript)
+}
+
+func LoadFromText(text string) (*Script, error) {
+	var r = strings.NewReader(text)
+	return LoadFromReader(r)
+}
+
+func parseScript(iScript *internal.Script) (*Script, error) {
+	var pages = make(map[string]*Page)
 	for _, iPage := range iScript.Pages {
 		var nPage = NewPage(iPage.Key)
-		if err = nPage.parse(iPage.Lines); err != nil {
+		if err := nPage.parse(iPage.Lines); err != nil {
 			return nil, err
 		}
-		nScript.pages[nPage.key] = nPage
+		pages[nPage.key] = nPage
 	}
-
+	var nScript = &Script{}
+	nScript.pages = pages
 	return nScript, nil
 }
 
