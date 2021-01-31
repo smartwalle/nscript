@@ -1,15 +1,22 @@
 package internal
 
+// 默认函数
 const (
-	// 脚本文件的入口函数
-	CmdMain = "@MAIN"
+	// 退出脚本
+	FuncExit = "@EXIT"
 
 	// 退出脚本
-	CmdExit = "@EXIT"
+	FuncClose = "@CLOSE"
+)
 
-	// 退出脚本
-	CmdClose = "@CLOSE"
+// 默认指令
+const (
+	CmdGoto  = "GOTO"
+	CmdBreak = "BREAK"
+)
 
+// 关键字相关
+const (
 	// 注释
 	KeyComment = ';'
 

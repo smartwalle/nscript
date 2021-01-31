@@ -2,11 +2,6 @@ package nscript
 
 import "fmt"
 
-var (
-	ActionGoto  = "GOTO"
-	ActionBreak = "BREAK"
-)
-
 type Action struct {
 	key    string
 	params []string
@@ -20,7 +15,7 @@ func NewAction(key string, params []string) *Action {
 }
 
 func (this *Action) exec(ctx Context) error {
-	var f = GetActionFunction(this.key)
+	var f = GetActionCommand(this.key)
 	if f == nil {
 		return fmt.Errorf("%s not found", this.key)
 	}

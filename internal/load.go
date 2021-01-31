@@ -17,7 +17,7 @@ var (
 	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
-	regexPage = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
+	regexFunction = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 )
 
 func LoadFile(file string) (*Script, error) {
@@ -34,29 +34,29 @@ func Load(r io.Reader) (*Script, error) {
 		return nil, err
 	}
 
-	var page *Page
+	var f *Function
 	var script = NewScript()
 
 	for _, line := range lines {
 		if line[0] == '[' {
-			var match = regexPage.FindStringSubmatch(line)
+			var match = regexFunction.FindStringSubmatch(line)
 			if len(match) > 0 {
-				if page != nil {
-					script.Add(page)
+				if f != nil {
+					script.Add(f)
 				}
 
-				page = NewPage(match[1])
+				f = NewFunction(match[1])
 				continue
 			}
 		}
 
-		if page != nil {
-			page.Add(line)
+		if f != nil {
+			f.Add(line)
 		}
 	}
 
-	if page != nil {
-		script.Add(page)
+	if f != nil {
+		script.Add(f)
 	}
 
 	return script, nil
@@ -118,13 +118,13 @@ func Read(r io.Reader) []string {
 }
 
 // Include 读取指定文件中的指定片断
-func Include(file, key string) ([]string, error) {
+func Include(file, name string) ([]string, error) {
 	var lines, err = ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
 
-	key = "[" + key + "]"
+	name = "[" + name + "]"
 
 	var stat = 0
 
@@ -135,7 +135,7 @@ func Include(file, key string) ([]string, error) {
 		}
 		switch stat {
 		case 0:
-			if line[0] == '[' && strings.HasPrefix(line, key) {
+			if line[0] == '[' && strings.HasPrefix(line, name) {
 				stat = 1
 			}
 		case 1:

@@ -6,12 +6,12 @@ import (
 )
 
 func main() {
-	nscript.RegisterCheckFunction("CHECKGOLD", func(key string, ctx nscript.Context, params ...string) (bool, error) {
-		fmt.Println(key, ctx, params)
+	nscript.RegisterCheckCommand("CHECKGOLD", func(name string, ctx nscript.Context, params ...string) (bool, error) {
+		fmt.Println(name, ctx, params)
 		return true, nil
 	})
-	nscript.RegisterActionFunction("TAKEGOLD", func(key string, ctx nscript.Context, params ...string) error {
-		fmt.Println(key, ctx, params)
+	nscript.RegisterActionCommand("TAKEGOLD", func(name string, ctx nscript.Context, params ...string) error {
+		fmt.Println(name, ctx, params)
 		return nil
 	})
 

@@ -8,7 +8,7 @@ import (
 )
 
 type Script struct {
-	pages map[string]*Page
+	functions map[string]*Function
 }
 
 func NewScript(file string) (*Script, error) {
@@ -37,42 +37,43 @@ func LoadFromText(text string) (*Script, error) {
 }
 
 func parseScript(iScript *internal.Script) (*Script, error) {
-	var pages = make(map[string]*Page)
-	for _, iPage := range iScript.Pages {
-		var nPage = NewPage(iPage.Key)
-		if err := nPage.parse(iPage.Lines); err != nil {
+	var functions = make(map[string]*Function)
+	for _, iFunc := range iScript.Functions {
+		var nFunc = NewFunction(iFunc.Name)
+		if err := nFunc.parse(iFunc.Lines); err != nil {
 			return nil, err
 		}
-		pages[nPage.key] = nPage
+		functions[nFunc.name] = nFunc
 	}
 	var nScript = &Script{}
-	nScript.pages = pages
+	nScript.functions = functions
 	return nScript, nil
 }
 
-func (this *Script) Exec(key string, ctx Context) ([]string, error) {
-	key = internal.ToUpper(key)
+func (this *Script) Exec(name string, ctx Context) ([]string, error) {
+	name = internal.ToUpper(name)
 
-	// 处理默认指令
-	switch key {
-	case internal.CmdExit:
+	// 处理默认方法
+	switch name {
+	case internal.FuncExit:
 		return nil, nil
-	case internal.CmdClose:
+	case internal.FuncClose:
 		return nil, nil
 	}
 
-	var page = this.pages[key]
-	if page == nil {
-		return nil, fmt.Errorf("%s not found", key)
+	var function = this.functions[name]
+	if function == nil {
+		return nil, fmt.Errorf("%s not found", name)
 	}
 
-	var says, gotoKey, err = page.exec(ctx)
+	var says, nFunc, err = function.exec(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	if gotoKey != "" {
-		return this.Exec(gotoKey, ctx)
+	if nFunc != "" {
+		// 执行其它函数
+		return this.Exec(nFunc, ctx)
 	}
 
 	return says, nil

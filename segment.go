@@ -8,8 +8,6 @@ import (
 )
 
 type Segment struct {
-	page *Page
-
 	checks      []*Check
 	actions     []*Action
 	elseActions []*Action
@@ -18,9 +16,8 @@ type Segment struct {
 	elseSays []string
 }
 
-func NewSegment(page *Page) *Segment {
+func NewSegment() *Segment {
 	var s = &Segment{}
-	s.page = page
 	return s
 }
 
@@ -160,12 +157,12 @@ func (this *Segment) execElseAction(ctx Context) ([]string, string, error) {
 func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) ([]string, string, error) {
 	for _, action := range actions {
 		switch action.key {
-		case ActionGoto:
+		case internal.CmdGoto:
 			if len(action.params) < 1 {
 				return nil, "", errors.New("syntax error: invalid arg for GOTO")
 			}
 			return nil, action.params[0], nil
-		case ActionBreak:
+		case internal.CmdBreak:
 			break
 		}
 

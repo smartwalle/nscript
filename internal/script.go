@@ -3,25 +3,25 @@ package internal
 import "strings"
 
 type Script struct {
-	Pages map[string]*Page
+	Functions map[string]*Function
 }
 
 func NewScript() *Script {
 	var s = &Script{}
-	s.Pages = make(map[string]*Page)
+	s.Functions = make(map[string]*Function)
 	return s
 }
 
-func (this *Script) Add(p *Page) {
+func (this *Script) Add(p *Function) {
 	if p == nil {
 		return
 	}
-	this.Pages[strings.ToUpper(p.Key)] = p
+	this.Functions[strings.ToUpper(p.Name)] = p
 }
 
-func (this *Script) Take(key string) *Page {
-	key = strings.ToUpper(key)
-	var page = this.Pages[key]
-	delete(this.Pages, key)
-	return page
+func (this *Script) Take(name string) *Function {
+	name = strings.ToUpper(name)
+	var f = this.Functions[name]
+	delete(this.Functions, name)
+	return f
 }

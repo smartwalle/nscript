@@ -15,7 +15,7 @@ func NewCheck(key string, params []string) *Check {
 }
 
 func (this *Check) exec(ctx Context) (bool, error) {
-	var f = GetCheckFunction(this.key)
+	var f = GetCheckCommand(this.key)
 	if f == nil {
 		return false, fmt.Errorf("%s not found", this.key)
 	}
