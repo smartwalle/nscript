@@ -1,6 +1,7 @@
 package nscript
 
 import (
+	"errors"
 	"fmt"
 	"github.com/smartwalle/nscript/internal"
 	"strings"
@@ -128,11 +129,49 @@ func (this *Segment) parseElseSay(line string) error {
 	return nil
 }
 
-func (this *Segment) Check() bool {
+func (this *Segment) check(ctx Context) (bool, error) {
 	for _, check := range this.checks {
-		if check.Exec() == false {
-			return false
+		ok, err := check.exec(ctx)
+		if err != nil {
+			// 若有错误，返回错误
+			return false, err
+		}
+		if ok == false {
+			// 若有失败，返回失败
+			return false, nil
 		}
 	}
-	return true
+	// 全部成功，返回成功
+	return true, nil
+}
+
+func (this *Segment) hasElse() bool {
+	return len(this.elseActions) > 0 || len(this.elseSays) > 0
+}
+
+func (this *Segment) execAction(ctx Context) ([]string, string, error) {
+	return this._execAction(ctx, this.actions, this.says)
+}
+
+func (this *Segment) execElseAction(ctx Context) ([]string, string, error) {
+	return this._execAction(ctx, this.elseActions, this.elseSays)
+}
+
+func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) ([]string, string, error) {
+	for _, action := range actions {
+		switch action.key {
+		case ActionGoto:
+			if len(action.params) < 1 {
+				return nil, "", errors.New("syntax error: invalid arg for GOTO")
+			}
+			return nil, action.params[0], nil
+		case ActionBreak:
+			break
+		}
+
+		if err := action.exec(ctx); err != nil {
+			return nil, "", err
+		}
+	}
+	return says, "", nil
 }

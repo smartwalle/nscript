@@ -1,9 +1,15 @@
-[@Main]
+[@MAIN]
 #IF
 CHECKGOLD > 1000
 #ACT
 TAKEGOLD 1000
+GOTO @THANKS
 #ELSESAY
  Sorry1.
  Sorry2.
  Sorry3.
+
+[@THANKS]
+#SAY
+ Thanks.
+ <Exit/@Exit>

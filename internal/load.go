@@ -10,9 +10,14 @@ import (
 )
 
 var (
+	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
 	regexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
-	regexInsert  = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*(@[^\n]+)`)
-	regexPage    = regexp.MustCompile(`^(\[[^\n]+\])\s*$`)
+
+	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
+	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*(@[^\n]+)`)
+
+	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
+	regexPage = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 )
 
 func LoadFile(file string) (*Script, error) {

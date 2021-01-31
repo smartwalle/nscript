@@ -42,13 +42,20 @@ func (this *Page) parse(lines []string) error {
 	return nil
 }
 
-func (this *Page) Exec(ctx Context) ([]string, error) {
+func (this *Page) exec(ctx Context) ([]string, string, error) {
 	for _, seg := range this.segments {
-		if seg.Check() {
-			// 执行 act  say
-		} else {
-			// 执行 else act    else say
+		var ok, err = seg.check(ctx)
+		if err != nil {
+			// 若有错误，返回错误
+			return nil, "", err
+		}
+		if ok {
+			// 执行 Action
+			return seg.execAction(ctx)
+		} else if seg.hasElse() {
+			// 执行 ElseAction
+			return seg.execElseAction(ctx)
 		}
 	}
-	return nil, nil
+	return nil, "", nil
 }

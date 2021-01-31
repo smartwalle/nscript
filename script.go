@@ -34,8 +34,17 @@ func (this *Script) Exec(key string, ctx Context) ([]string, error) {
 	key = strings.ToUpper(key)
 	var page = this.pages[key]
 	if page == nil {
-		return nil, fmt.Errorf("not found %s", key)
+		return nil, fmt.Errorf("%s not found", key)
 	}
 
-	return page.Exec(ctx)
+	var says, gotoKey, err = page.exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if gotoKey != "" {
+		return this.Exec(gotoKey, ctx)
+	}
+
+	return says, nil
 }

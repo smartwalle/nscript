@@ -1,5 +1,7 @@
 package nscript
 
+import "fmt"
+
 type Check struct {
 	key    string
 	params []string
@@ -12,6 +14,10 @@ func NewCheck(key string, params []string) *Check {
 	return c
 }
 
-func (this *Check) Exec() bool {
-	return false
+func (this *Check) exec(ctx Context) (bool, error) {
+	var f = GetCheckFunction(this.key)
+	if f == nil {
+		return false, fmt.Errorf("%s not found", this.key)
+	}
+	return f(this.key, ctx, this.params...)
 }
