@@ -30,12 +30,12 @@ func NewScript(file string) (*Script, error) {
 	return nScript, nil
 }
 
-func (this *Script) Exec(key string) error {
+func (this *Script) Exec(key string, ctx Context) ([]string, error) {
 	key = strings.ToUpper(key)
 	var page = this.pages[key]
 	if page == nil {
-		return fmt.Errorf("not found %s", key)
+		return nil, fmt.Errorf("not found %s", key)
 	}
 
-	return page.Exec()
+	return page.Exec(ctx)
 }

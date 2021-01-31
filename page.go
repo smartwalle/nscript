@@ -42,7 +42,7 @@ func (this *Page) parse(lines []string) error {
 	return nil
 }
 
-func (this *Page) Exec(...interface{}) ([]string, error) {
+func (this *Page) Exec(ctx Context) ([]string, error) {
 	for _, seg := range this.segments {
 		if seg.Check() {
 			// 执行 act  say
