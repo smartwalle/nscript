@@ -17,7 +17,7 @@ func NewCheck(name string, params []string) *Check {
 func (this *Check) exec(ctx Context) (bool, error) {
 	var cmd = GetCheckCommand(this.name)
 	if cmd == nil {
-		return false, fmt.Errorf("%s not found", this.name)
+		return false, fmt.Errorf("not found command %s", this.name)
 	}
 	return cmd(this.name, ctx, this.params...)
 }

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/smartwalle/nscript/internal"
-	"strings"
 )
 
 type Segment struct {
@@ -26,7 +25,7 @@ func (this *Segment) parse(lines []string) error {
 
 	for _, line := range lines {
 		if line[0] == internal.KeyPrefix {
-			keyword = strings.ToUpper(line)
+			keyword = internal.ToUpper(line)
 			continue
 		}
 
@@ -62,7 +61,7 @@ func (this *Segment) parse(lines []string) error {
 				keyword = internal.KeySay
 				continue
 			}
-			return fmt.Errorf("unknown keyword %s", keyword)
+			return fmt.Errorf("not found keyword %s", keyword)
 		}
 
 	}
@@ -74,7 +73,7 @@ func (this *Segment) parseCheck(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var name = strings.ToUpper(parts[0])
+	var name = internal.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
@@ -90,7 +89,7 @@ func (this *Segment) parseAction(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var name = strings.ToUpper(parts[0])
+	var name = internal.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
@@ -105,7 +104,7 @@ func (this *Segment) parseElseAction(line string) error {
 	if len(parts) == 0 {
 		return nil
 	}
-	var name = strings.ToUpper(parts[0])
+	var name = internal.ToUpper(parts[0])
 	var params []string
 	if len(parts) > 1 {
 		params = parts[1:]
@@ -159,7 +158,7 @@ func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) 
 		switch action.name {
 		case internal.CmdGoto:
 			if len(action.params) < 1 {
-				return nil, "", errors.New("syntax error: invalid arg for GOTO")
+				return nil, "", errors.New("syntax error: invalid args for GOTO")
 			}
 			return nil, action.params[0], nil
 		case internal.CmdBreak:

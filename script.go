@@ -63,7 +63,7 @@ func (this *Script) Exec(name string, ctx Context) ([]string, error) {
 
 	var function = this.functions[name]
 	if function == nil {
-		return nil, fmt.Errorf("%s not found", name)
+		return nil, fmt.Errorf("not found function %s", name)
 	}
 
 	var says, nFunc, err = function.exec(ctx)

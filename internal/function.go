@@ -1,7 +1,5 @@
 package internal
 
-import "strings"
-
 type Function struct {
 	Name  string
 	Lines []string
@@ -9,7 +7,7 @@ type Function struct {
 
 func NewFunction(name string) *Function {
 	return &Function{
-		Name: strings.ToUpper(name),
+		Name: ToUpper(name),
 	}
 }
 
