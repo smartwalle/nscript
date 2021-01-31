@@ -24,11 +24,11 @@ const (
 
 	// 将指定脚本文件中的所有内容引入到当前脚本中
 	// 示例：
-	// #INSERT dir1/dir2/file.txt
+	// #INSERT [dir1/dir2/file.txt]
 	KeyWordInsert = "#INSERT"
 
 	// 将指定脚本文件中的特定脚本片断(函数)引入到当前脚本中
 	// 示例：
-	// #INCLUDE dir1/dir2/file.txt @SECTION_1
+	// #INCLUDE [dir1/dir2/file.txt] @SECTION_1
 	KeyWordInclude = "#INCLUDE"
 )
