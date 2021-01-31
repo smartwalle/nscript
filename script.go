@@ -3,6 +3,7 @@ package nscript
 import (
 	"fmt"
 	"github.com/smartwalle/nscript/internal"
+	"strings"
 )
 
 type Script struct {
@@ -20,15 +21,21 @@ func NewScript(file string) (*Script, error) {
 
 	for _, iPage := range iScript.Pages {
 		var nPage = NewPage(iPage.Key)
-
-		fmt.Println(iPage.Key)
-
 		if err = nPage.parse(iPage.Lines); err != nil {
 			return nil, err
 		}
-
 		nScript.pages[nPage.key] = nPage
 	}
 
 	return nScript, nil
+}
+
+func (this *Script) Exec(key string) error {
+	key = strings.ToUpper(key)
+	var page = this.pages[key]
+	if page == nil {
+		return fmt.Errorf("not found %s", key)
+	}
+
+	return page.Exec()
 }

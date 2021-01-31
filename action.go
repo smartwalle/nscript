@@ -11,3 +11,6 @@ func NewAction(key string, params []string) *Action {
 	a.params = params
 	return a
 }
+
+func (this *Action) Exec() {
+}

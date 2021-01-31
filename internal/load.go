@@ -7,7 +7,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-	"unicode"
 )
 
 var (
@@ -66,8 +65,8 @@ func ExpandScript(lines []string) ([]string, error) {
 			continue
 		}
 
-		if line[0] == '#' {
-			if strings.HasPrefix(line, KeyWordInsert) {
+		if line[0] == KeyPrefix {
+			if strings.HasPrefix(line, KeyInsert) {
 				var match = regexInsert.FindStringSubmatch(line)
 				var insertLines, err = ReadFile(match[1])
 				if err != nil {
@@ -79,7 +78,7 @@ func ExpandScript(lines []string) ([]string, error) {
 				}
 				nLines = append(nLines, insertLines...)
 				continue
-			} else if strings.HasPrefix(line, KeyWordInclude) {
+			} else if strings.HasPrefix(line, KeyInclude) {
 				var match = regexInclude.FindStringSubmatch(line)
 				var insertLines, err = Include(match[1], match[2])
 				if err != nil {
@@ -148,16 +147,6 @@ func Include(file, key string) ([]string, error) {
 	}
 	return nil, errors.New("syntax error:" + file)
 }
-
-func RemoveBOM(bytes []byte) []byte {
-	if len(bytes) >= 3 {
-		if bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf {
-			return bytes[3:]
-		}
-	}
-	return bytes
-}
-
 func SkipLine(line string) bool {
 	if line == "" {
 		return true
@@ -166,8 +155,4 @@ func SkipLine(line string) bool {
 		return true
 	}
 	return false
-}
-
-func TrimRightSpace(s string) string {
-	return strings.TrimRightFunc(s, unicode.IsSpace)
 }

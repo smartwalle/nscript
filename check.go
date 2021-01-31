@@ -11,3 +11,7 @@ func NewCheck(key string, params []string) *Check {
 	c.params = params
 	return c
 }
+
+func (this *Check) Exec() bool {
+	return false
+}

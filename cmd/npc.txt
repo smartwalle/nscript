@@ -1,0 +1,9 @@
+[@Main]
+#IF
+CHECKGOLD > 1000
+#ACT
+TAKEGOLD 1000
+#ELSESAY
+ Sorry1.
+ Sorry2.
+ Sorry3.
