@@ -15,12 +15,14 @@ const (
 	CmdBreak = "BREAK"
 )
 
-// 关键字相关
+const (
+	KeyPrefix = '#'
+)
+
+// 关键字
 const (
 	// 注释
 	KeyComment = ';'
-
-	KeyPrefix = '#'
 
 	// IF 语句，执行判断
 	KeyIf = "#IF"
