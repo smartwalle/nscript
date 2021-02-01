@@ -3,6 +3,7 @@ package internal
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"regexp"
@@ -11,10 +12,12 @@ import (
 
 var (
 	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
+	// 合并指定文件中的指定节点的内容到当前文件
 	regexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
-	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
-	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*(@[^\n]+)`)
+	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt"
+	// 合并指定文件中的所有内容到当前文件
+	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
 	regexFunction = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
@@ -38,6 +41,9 @@ func Load(r io.Reader) (*Script, error) {
 	var script = NewScript()
 
 	for _, line := range lines {
+
+		fmt.Println(line)
+
 		if line[0] == '[' {
 			var match = regexFunction.FindStringSubmatch(line)
 			if len(match) > 0 {

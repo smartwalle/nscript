@@ -1,1 +1,1 @@
-#INSERT [b1.txt] @MAIN
+#INSERT [b1.txt]
