@@ -26,8 +26,19 @@ func (this *Function) parse(lines []string) error {
 			if err := nSegment.parse(sLines); err != nil {
 				return err
 			}
-			this.segments = append(this.segments, nSegment)
-			sLines = nil
+
+			// 判断代码块是否有执行分支
+			// #IF
+			// CMD1
+			// #IF
+			// CMD2
+			// #ACT
+			// CMD3
+			// 上述代码会把 CMD1 和 CMD2 作为并列条件存在，因为第一个 IF 语句没有任何有效的分支
+			if nSegment.hasMainBranch() || nSegment.hasElseBranch() {
+				this.segments = append(this.segments, nSegment)
+				sLines = nil
+			}
 		}
 		sLines = append(sLines, line)
 	}
@@ -52,7 +63,7 @@ func (this *Function) exec(ctx Context) ([]string, string, error) {
 		if ok {
 			// 执行 Action
 			return seg.execAction(ctx)
-		} else if seg.hasElse() {
+		} else if seg.hasElseBranch() {
 			// 执行 ElseAction
 			return seg.execElseAction(ctx)
 		}

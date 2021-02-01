@@ -141,7 +141,11 @@ func (this *Segment) check(ctx Context) (bool, error) {
 	return true, nil
 }
 
-func (this *Segment) hasElse() bool {
+func (this *Segment) hasMainBranch() bool {
+	return len(this.actions) > 0 || len(this.says) > 0
+}
+
+func (this *Segment) hasElseBranch() bool {
 	return len(this.elseActions) > 0 || len(this.elseSays) > 0
 }
 

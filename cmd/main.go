@@ -15,7 +15,7 @@ func main() {
 		return nil
 	})
 
-	var s, err = nscript.NewScript("./npc.txt")
+	var s, err = nscript.NewScript("./c.txt")
 	if err != nil {
 		fmt.Println(err)
 		return
