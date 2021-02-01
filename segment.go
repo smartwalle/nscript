@@ -173,5 +173,20 @@ func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) 
 			return nil, "", err
 		}
 	}
+	says = this.formatSay(ctx, says)
 	return says, "", nil
+}
+
+func (this *Segment) formatSay(ctx Context, says []string) []string {
+	var nSays = make([]string, 0, len(says))
+	for _, say := range says {
+		var nSay = internal.RegexParamName.ReplaceAllStringFunc(say, func(s string) string {
+			var match = internal.RegexParamName.FindStringSubmatch(s)
+			var key = match[1]
+			var cmd = GetFormatCommand(key)
+			return cmd(key, ctx)
+		})
+		nSays = append(nSays, nSay)
+	}
+	return nSays
 }

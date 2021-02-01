@@ -2,7 +2,6 @@ package internal
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"regexp"
@@ -11,13 +10,16 @@ import (
 
 var (
 	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
-	regexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
+	RegexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
 	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt"
-	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
+	RegexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
-	regexFunction = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
+	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
+
+	// 从字符串 "{{$PARAM}}" 中提取出 "$PARAM"
+	RegexParamName = regexp.MustCompile(`{{(\$\w+)}}`)
 )
 
 func LoadFile(file string) (*Script, error) {
@@ -38,11 +40,8 @@ func Load(r io.Reader) (*Script, error) {
 	var script = NewScript()
 
 	for _, line := range lines {
-
-		fmt.Println(line)
-
 		if line[0] == '[' {
-			var match = regexFunction.FindStringSubmatch(line)
+			var match = RegexFunctionName.FindStringSubmatch(line)
 			if len(match) > 0 {
 				if f != nil {
 					script.Add(f)
@@ -75,7 +74,7 @@ func ExpandScript(lines []string) ([]string, error) {
 
 		if line[0] == KeyPrefix {
 			if strings.HasPrefix(line, KeyInsert) {
-				var match = regexInsert.FindStringSubmatch(line)
+				var match = RegexInsert.FindStringSubmatch(line)
 				var insertLines, err = ReadFile(match[1])
 				if err != nil {
 					return nil, err
@@ -87,7 +86,7 @@ func ExpandScript(lines []string) ([]string, error) {
 				nLines = append(nLines, insertLines...)
 				continue
 			} else if strings.HasPrefix(line, KeyInclude) {
-				var match = regexInclude.FindStringSubmatch(line)
+				var match = RegexInclude.FindStringSubmatch(line)
 				var insertLines, err = Include(match[1], match[2])
 				if err != nil {
 					return nil, err

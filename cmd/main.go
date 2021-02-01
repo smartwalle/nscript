@@ -15,7 +15,15 @@ func main() {
 		return nil
 	})
 
-	var s, err = nscript.NewScript("./b.txt")
+	nscript.RegisterFormatCommand("$USERNAME", func(name string, ctx nscript.Context) string {
+		return "SmartWalle"
+	})
+
+	nscript.RegisterFormatCommand("$GOLD", func(name string, ctx nscript.Context) string {
+		return "1000"
+	})
+
+	var s, err = nscript.NewScript("./npc.txt")
 	if err != nil {
 		fmt.Println(err)
 		return

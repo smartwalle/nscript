@@ -8,8 +8,9 @@ GOTO @THANKS
  Sorry1.
  Sorry2.
  Sorry3.
+ {{$GOLD}}
 
 [@THANKS]
 #SAY
- Thanks.
+ 谢谢你 {{$USERNAME}}，你有 {{$GOLD}} 金币。
  <Exit/@Exit>
