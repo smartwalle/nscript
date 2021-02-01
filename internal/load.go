@@ -2,7 +2,6 @@ package internal
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -12,11 +11,9 @@ import (
 
 var (
 	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
-	// 合并指定文件中的指定节点的内容到当前文件
 	regexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
 	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt"
-	// 合并指定文件中的所有内容到当前文件
 	regexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
@@ -145,18 +142,15 @@ func Include(file, name string) ([]string, error) {
 				stat = 1
 			}
 		case 1:
-			if line[0] == '{' {
-				stat = 2
-			}
-		case 2:
-			if line[0] == '}' {
+			if line[0] == '[' {
 				return nLines, nil
 			}
 
 			nLines = append(nLines, line)
 		}
 	}
-	return nil, errors.New("syntax error:" + file)
+	return nLines, nil
+	//return nil, errors.New("syntax error:" + file)
 }
 func SkipLine(line string) bool {
 	if line == "" {
