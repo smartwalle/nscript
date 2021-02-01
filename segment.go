@@ -166,7 +166,7 @@ func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) 
 			}
 			return nil, action.params[0], nil
 		case internal.CmdBreak:
-			break
+			return nil, "", nil
 		}
 
 		if err := action.exec(ctx); err != nil {
