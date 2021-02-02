@@ -1,0 +1,4 @@
+[@MAIN]
+#IF
+CHECKGOLD > 1000
+#INCLUDE [./include_gender.txt] @GENDER

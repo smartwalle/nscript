@@ -1,5 +1,0 @@
-[@MAIN]
-#IF
-CHECK [952] 1
-#ELSEACT
-SET [952] 1

@@ -1,1 +1,0 @@
-package nscript_test

@@ -1,0 +1,7 @@
+[@MAIN]
+#IF
+CHECKGENDER 1
+#SAY
+先生你好
+#ELSESAY
+女士你好

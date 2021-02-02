@@ -1,9 +1,0 @@
-[@MAIN]
-#IF
-CHECKGOLD > 25
-#IF
-CHECKGOLD > 300
-#SAY
-TAKEGOLD NewbieGuild
-#ELSESAY
-this is a elsesay.

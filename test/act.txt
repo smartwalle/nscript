@@ -1,0 +1,9 @@
+[@MAIN]
+#IF
+CHECKGOLD >= 1000
+#ACT
+TAKEGOLD 1000
+#SAY
+谢谢老板
+#ELSESAY
+你说什么?

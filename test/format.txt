@@ -1,0 +1,3 @@
+[@MAIN]
+#SAY
+你好 {{$USERNAME}}, 你有 {{$GOLD}} 金币

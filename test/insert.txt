@@ -1,0 +1,6 @@
+[@MAIN]
+#ACT
+GOTO @GENDER
+
+[@GENDER]
+#INSERT [./insert_gender.txt]

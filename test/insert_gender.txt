@@ -1,0 +1,6 @@
+#IF
+CHECKGENDER 1
+#SAY
+先生
+#ELSESAY
+女士

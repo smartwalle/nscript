@@ -1,4 +1,0 @@
-[@LOGIN]
-#IF
-ISADMIN
-#INCLUDE [b2.txt] @MAIN
