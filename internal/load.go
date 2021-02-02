@@ -24,6 +24,9 @@ var (
 
 func LoadFile(file string) (*Script, error) {
 	var r, err = os.Open(file)
+	if r != nil {
+		defer r.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +105,9 @@ func ExpandScript(lines []string) ([]string, error) {
 
 func ReadFile(file string) ([]string, error) {
 	var r, err = os.Open(file)
+	if r != nil {
+		defer r.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
