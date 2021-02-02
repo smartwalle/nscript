@@ -79,8 +79,8 @@ func (this *Segment) parseCheck(line string) error {
 		params = parts[1:]
 	}
 
-	var validator = GetCommandParser(name)
-	nParams, err := validator(name, params...)
+	var parser = GetCommandParser(name)
+	nParams, err := parser(name, params...)
 	if err != nil {
 		return err
 	}
@@ -101,8 +101,8 @@ func (this *Segment) parseAction(line string) error {
 		params = parts[1:]
 	}
 
-	var validator = GetCommandParser(name)
-	nParams, err := validator(name, params...)
+	var parser = GetCommandParser(name)
+	nParams, err := parser(name, params...)
 	if err != nil {
 		return err
 	}
@@ -122,8 +122,8 @@ func (this *Segment) parseElseAction(line string) error {
 		params = parts[1:]
 	}
 
-	var validator = GetCommandParser(name)
-	nParams, err := validator(name, params...)
+	var parser = GetCommandParser(name)
+	nParams, err := parser(name, params...)
 	if err != nil {
 		return err
 	}
