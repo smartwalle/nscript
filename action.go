@@ -4,10 +4,10 @@ import "fmt"
 
 type Action struct {
 	name   string
-	params []string
+	params []interface{}
 }
 
-func NewAction(name string, params []string) *Action {
+func NewAction(name string, params []interface{}) *Action {
 	var a = &Action{}
 	a.name = name
 	a.params = params

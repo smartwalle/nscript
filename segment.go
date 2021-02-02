@@ -79,7 +79,13 @@ func (this *Segment) parseCheck(line string) error {
 		params = parts[1:]
 	}
 
-	var check = NewCheck(name, params)
+	var validator = GetCommandParser(name)
+	nParams, err := validator(name, params...)
+	if err != nil {
+		return err
+	}
+
+	var check = NewCheck(name, nParams)
 	this.checks = append(this.checks, check)
 	return nil
 }
@@ -95,7 +101,13 @@ func (this *Segment) parseAction(line string) error {
 		params = parts[1:]
 	}
 
-	var action = NewAction(name, params)
+	var validator = GetCommandParser(name)
+	nParams, err := validator(name, params...)
+	if err != nil {
+		return err
+	}
+
+	var action = NewAction(name, nParams)
 	this.actions = append(this.actions, action)
 	return nil
 }
@@ -110,7 +122,13 @@ func (this *Segment) parseElseAction(line string) error {
 		params = parts[1:]
 	}
 
-	var action = NewAction(name, params)
+	var validator = GetCommandParser(name)
+	nParams, err := validator(name, params...)
+	if err != nil {
+		return err
+	}
+
+	var action = NewAction(name, nParams)
 	this.elseActions = append(this.elseActions, action)
 	return nil
 }
@@ -164,7 +182,7 @@ func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) 
 			if len(action.params) < 1 {
 				return nil, "", errors.New("syntax error: invalid args for GOTO")
 			}
-			return nil, action.params[0], nil
+			return nil, action.params[0].(string), nil
 		case internal.CmdBreak:
 			return nil, "", nil
 		}

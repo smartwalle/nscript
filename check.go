@@ -4,10 +4,10 @@ import "fmt"
 
 type Check struct {
 	name   string
-	params []string
+	params []interface{}
 }
 
-func NewCheck(name string, params []string) *Check {
+func NewCheck(name string, params []interface{}) *Check {
 	var c = &Check{}
 	c.name = name
 	c.params = params

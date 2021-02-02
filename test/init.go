@@ -3,8 +3,8 @@ package test
 import (
 	"errors"
 	"fmt"
-	"github.com/smartwalle/conv4go"
 	"github.com/smartwalle/nscript"
+	"strconv"
 )
 
 type Gender int8
@@ -35,31 +35,74 @@ func NewContext() *Context {
 	return c
 }
 
+func parseInt64(v string) int64 {
+	nv, _ := strconv.ParseInt(v, 10, 64)
+	return nv
+}
+
 func init() {
-	// check
-	nscript.RegisterCheckCommand("CHECKGOLD", func(name string, ctx nscript.Context, params ...string) (bool, error) {
-		var op = params[0]
-		var value = params[1]
+	// 解析器
+	nscript.RegisterCommandParser("CHECKGOLD", func(name string, params ...string) ([]interface{}, error) {
+		if len(params) != 2 {
+			return nil, errors.New("CHECKGOLD 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = params[0]
+		nParams[1] = parseInt64(params[1])
+		return nParams, nil
+	})
+
+	nscript.RegisterCommandParser("CHECKGENDER", func(name string, params ...string) ([]interface{}, error) {
+		if len(params) != 1 {
+			return nil, errors.New("CHECKGENDER 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = parseInt64(params[0])
+		return nParams, nil
+	})
+
+	nscript.RegisterCommandParser("CHECKAGE", func(name string, params ...string) ([]interface{}, error) {
+		if len(params) != 2 {
+			return nil, errors.New("CHECKAGE 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = params[0]
+		nParams[1] = parseInt64(params[1])
+		return nParams, nil
+	})
+
+	nscript.RegisterCommandParser("TAKEGOLD", func(name string, params ...string) ([]interface{}, error) {
+		if len(params) != 1 {
+			return nil, errors.New("TAKEGOLD 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = parseInt64(params[0])
+		return nParams, nil
+	})
+
+	// 判断条件
+	nscript.RegisterCheckCommand("CHECKGOLD", func(name string, ctx nscript.Context, params ...interface{}) (bool, error) {
+		var op = params[0].(string)
+		var value = params[1].(int64)
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64(op, nCtx.User.Gold, value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKGENDER", func(name string, ctx nscript.Context, params ...string) (bool, error) {
-		var value = params[0]
+	nscript.RegisterCheckCommand("CHECKGENDER", func(name string, ctx nscript.Context, params ...interface{}) (bool, error) {
+		var value = params[0].(int64)
 		var nCtx = ctx.(*Context)
-		return nscript.CompareInt64("=", nCtx.User.Gender, value), nil
+		return nscript.CompareInt64("=", int64(nCtx.User.Gender), value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKAGE", func(name string, ctx nscript.Context, params ...string) (bool, error) {
-		var op = params[0]
-		var value = params[1]
+	nscript.RegisterCheckCommand("CHECKAGE", func(name string, ctx nscript.Context, params ...interface{}) (bool, error) {
+		var op = params[0].(string)
+		var value = params[1].(int64)
 		var nCtx = ctx.(*Context)
-		return nscript.CompareInt64(op, nCtx.User.Age, value), nil
+		return nscript.CompareInt64(op, int64(nCtx.User.Age), value), nil
 	})
 
-	// action
-	nscript.RegisterActionCommand("TAKEGOLD", func(name string, ctx nscript.Context, params ...string) error {
+	// 操作
+	nscript.RegisterActionCommand("TAKEGOLD", func(name string, ctx nscript.Context, params ...interface{}) error {
 		var nCtx = ctx.(*Context)
-		var value = params[0]
-		var gold = conv4go.Int64(value)
+		var gold = params[0].(int64)
 		if gold <= 0 || gold > nCtx.User.Gold {
 			return errors.New("没有足够的金币")
 		}
@@ -67,7 +110,7 @@ func init() {
 		return nil
 	})
 
-	// format
+	// 格式化
 	nscript.RegisterFormatCommand("$USERNAME", func(name string, ctx nscript.Context) string {
 		var nCtx = ctx.(*Context)
 		return nCtx.User.Name
