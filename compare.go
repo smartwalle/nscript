@@ -14,9 +14,9 @@ func CompareInt64(op string, a, b interface{}) bool {
 		return aValue > bValue
 	case ">=":
 		return aValue >= bValue
-	case "==":
+	case "==", "=":
 		return aValue == bValue
-	case "!=":
+	case "!=", "<>":
 		return aValue != bValue
 	}
 	return false
