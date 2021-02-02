@@ -202,6 +202,9 @@ func (this *Segment) formatSay(ctx Context, says []string) []string {
 			var match = internal.RegexParamName.FindStringSubmatch(s)
 			var key = match[1]
 			var cmd = GetFormatCommand(key)
+			if cmd == nil {
+				return s
+			}
 			return cmd(key, ctx)
 		})
 		nSays = append(nSays, nSay)
