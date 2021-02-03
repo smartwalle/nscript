@@ -12,14 +12,14 @@ var (
 	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
 	RegexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
-	// 从字符串 "#INSERT [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt"
+	// 从字符串 "#INSERT [dir1/dir2/file.txt]" 中提取出 "dir1/dir2/file.txt"
 	RegexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
 	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "{{$PARAM}}" 中提取出 "$PARAM"
-	RegexParamName = regexp.MustCompile(`{{(\$\w+)}}`)
+	RegexFormatParam = regexp.MustCompile(`\<(\$\w+)(/\w+)?\>`)
 )
 
 func LoadFile(file string) (*Script, error) {

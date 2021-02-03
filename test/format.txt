@@ -1,3 +1,5 @@
 [@MAIN]
 #SAY
-你好 {{$USERNAME}}, 你有 {{$GOLD}} 金币
+你好 {{<$USERNAME/RED>}}, 你有 {{<$GOLD>/BLUE}} 金币, {这个不匹配}
+
+; <Exit/@Exit>
