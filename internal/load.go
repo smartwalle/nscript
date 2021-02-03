@@ -18,8 +18,8 @@ var (
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
 	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 
-	// 从字符串 "{{$PARAM}}" 中提取出 "$PARAM"
-	RegexFormatParam = regexp.MustCompile(`\<(\$\w+)(/\w+)?\>`)
+	// 从字符串 "<$PARAM>" 中提取出 "$PARAM"
+	RegexFormatParam = regexp.MustCompile(`\<(\$\w+)\>`)
 )
 
 func LoadFile(file string) (*Script, error) {

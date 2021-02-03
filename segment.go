@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/smartwalle/nscript/internal"
-	"strings"
 )
 
 type Segment struct {
@@ -200,21 +199,12 @@ func (this *Segment) formatSay(ctx Context, says []string) []string {
 	var nSays = make([]string, 0, len(says))
 	for _, say := range says {
 		var nSay = internal.RegexFormatParam.ReplaceAllStringFunc(say, func(s string) string {
-			var matches = internal.RegexFormatParam.FindStringSubmatch(s)
-			var key = matches[1]
-
-			var format = GetFormatCommand(key)
-			if format == nil {
+			var key = s[1 : len(s)-1]
+			var formatCmd = GetFormatCommand(key)
+			if formatCmd == nil {
 				return s
 			}
-
-			var nStr = format(key, ctx)
-
-			if matches[2] == "" {
-				return nStr
-			}
-			return strings.Join([]string{nStr, matches[2]}, "")
-
+			return formatCmd(key, ctx)
 		})
 		nSays = append(nSays, nSay)
 	}
