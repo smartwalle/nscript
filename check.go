@@ -19,5 +19,5 @@ func (this *Check) exec(ctx Context) (bool, error) {
 	if cmd == nil {
 		return false, fmt.Errorf("not found check command %s", this.name)
 	}
-	return cmd(this.name, ctx, this.params...)
+	return cmd(ctx, this.params...)
 }

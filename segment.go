@@ -79,8 +79,8 @@ func (this *Segment) parseCheck(line string) error {
 		params = parts[1:]
 	}
 
-	var parser = GetCommandParser(name)
-	nParams, err := parser(name, params...)
+	var cmdParser = GetCommandParser(name)
+	nParams, err := cmdParser(params...)
 	if err != nil {
 		return err
 	}
@@ -91,30 +91,31 @@ func (this *Segment) parseCheck(line string) error {
 }
 
 func (this *Segment) parseAction(line string) error {
-	var parts = internal.Split(line, " ")
-	if len(parts) == 0 {
-		return nil
-	}
-	var name = internal.ToUpper(parts[0])
-	var params []string
-	if len(parts) > 1 {
-		params = parts[1:]
-	}
-
-	var parser = GetCommandParser(name)
-	nParams, err := parser(name, params...)
+	var action, err = this._parseAction(line)
 	if err != nil {
 		return err
 	}
-
-	var action = NewAction(name, nParams)
-	this.actions = append(this.actions, action)
+	if action != nil {
+		this.actions = append(this.actions, action)
+	}
 	return nil
 }
+
 func (this *Segment) parseElseAction(line string) error {
+	var action, err = this._parseAction(line)
+	if err != nil {
+		return err
+	}
+	if action != nil {
+		this.elseActions = append(this.elseActions, action)
+	}
+	return nil
+}
+
+func (this *Segment) _parseAction(line string) (*Action, error) {
 	var parts = internal.Split(line, " ")
 	if len(parts) == 0 {
-		return nil
+		return nil, nil
 	}
 	var name = internal.ToUpper(parts[0])
 	var params []string
@@ -122,15 +123,13 @@ func (this *Segment) parseElseAction(line string) error {
 		params = parts[1:]
 	}
 
-	var parser = GetCommandParser(name)
-	nParams, err := parser(name, params...)
+	var cmdParser = GetCommandParser(name)
+	nParams, err := cmdParser(params...)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	var action = NewAction(name, nParams)
-	this.elseActions = append(this.elseActions, action)
-	return nil
+	return action, nil
 }
 
 func (this *Segment) parseSay(line string) error {
@@ -204,7 +203,7 @@ func (this *Segment) formatSay(ctx Context, says []string) []string {
 			if formatCmd == nil {
 				return s
 			}
-			return formatCmd(key, ctx)
+			return formatCmd(ctx)
 		})
 		nSays = append(nSays, nSay)
 	}

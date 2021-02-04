@@ -19,5 +19,5 @@ func (this *Action) exec(ctx Context) error {
 	if cmd == nil {
 		return fmt.Errorf("not found action command %s", this.name)
 	}
-	return cmd(this.name, ctx, this.params...)
+	return cmd(ctx, this.params...)
 }
