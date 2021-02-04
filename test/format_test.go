@@ -50,3 +50,42 @@ func Test_Format(t *testing.T) {
 		}
 	}
 }
+
+func Benchmark_Format(b *testing.B) {
+	script, err := nscript.NewScript("./format.txt")
+	if err != nil {
+		b.Fatal("加载脚本发生错误:", err)
+	}
+
+	for i := 0; i < b.N; i++ {
+		var ctx = NewContext()
+
+		var testTbl = []struct {
+			name   string
+			gold   int64
+			expect string
+		}{
+			{"名字1", 90000, ""},
+		}
+
+		for _, test := range testTbl {
+			ctx.User.Name = test.name
+			ctx.User.Gold = test.gold
+			test.expect = fmt.Sprintf("你好 {{%s/RED}}, 你有 %d 金币, {这个不匹配, 我要<Exit/@EXIT>}", test.name, test.gold)
+
+			res, err := script.Exec("@MAIN", ctx)
+			if err != nil {
+				b.Fatal("执行脚本发生错误:", err)
+			}
+
+			if len(res) != 1 {
+				b.Fatal("脚本结果不符合预期")
+			}
+			var actual = res[0]
+
+			if actual != test.expect {
+				b.Fatal("脚本结果不符合预期, 期望结果:", test.expect, "实际结果:", actual)
+			}
+		}
+	}
+}
