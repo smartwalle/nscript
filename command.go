@@ -5,9 +5,9 @@ import (
 )
 
 type CommandParser func(params ...string) ([]interface{}, error)
-type CheckCommand func(ctx Context, params ...interface{}) (bool, error)
-type ActionCommand func(ctx Context, params ...interface{}) error
-type FormatCommand func(ctx Context) string
+type CheckCommand func(script *Script, ctx Context, params ...interface{}) (bool, error)
+type ActionCommand func(script *Script, ctx Context, params ...interface{}) error
+type FormatCommand func(script *Script, ctx Context) string
 
 // 解析指令：解析脚本的过程中，用于对各指令进行解析，比如判断参数个数，转换参数类型。
 var commandParsers = make(map[string]CommandParser)

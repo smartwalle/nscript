@@ -53,19 +53,19 @@ func (this *Function) parse(lines []string) error {
 	return nil
 }
 
-func (this *Function) exec(ctx Context) ([]string, string, error) {
+func (this *Function) exec(script *Script, ctx Context) ([]string, string, error) {
 	for _, seg := range this.segments {
-		var ok, err = seg.check(ctx)
+		var ok, err = seg.check(script, ctx)
 		if err != nil {
 			// 若有错误，返回错误
 			return nil, "", err
 		}
 		if ok {
 			// 执行 Action
-			return seg.execAction(ctx)
+			return seg.execAction(script, ctx)
 		} else if seg.hasElseBranch() {
 			// 执行 ElseAction
-			return seg.execElseAction(ctx)
+			return seg.execElseAction(script, ctx)
 		}
 	}
 	return nil, "", nil

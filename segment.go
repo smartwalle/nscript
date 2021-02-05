@@ -142,9 +142,9 @@ func (this *Segment) parseElseSay(line string) error {
 	return nil
 }
 
-func (this *Segment) check(ctx Context) (bool, error) {
+func (this *Segment) check(script *Script, ctx Context) (bool, error) {
 	for _, check := range this.checks {
-		ok, err := check.exec(ctx)
+		ok, err := check.exec(script, ctx)
 		if err != nil {
 			// 若有错误，返回错误
 			return false, err
@@ -166,15 +166,15 @@ func (this *Segment) hasElseBranch() bool {
 	return len(this.elseActions) > 0 || len(this.elseSays) > 0
 }
 
-func (this *Segment) execAction(ctx Context) ([]string, string, error) {
-	return this._execAction(ctx, this.actions, this.says)
+func (this *Segment) execAction(script *Script, ctx Context) ([]string, string, error) {
+	return this._execAction(script, ctx, this.actions, this.says)
 }
 
-func (this *Segment) execElseAction(ctx Context) ([]string, string, error) {
-	return this._execAction(ctx, this.elseActions, this.elseSays)
+func (this *Segment) execElseAction(script *Script, ctx Context) ([]string, string, error) {
+	return this._execAction(script, ctx, this.elseActions, this.elseSays)
 }
 
-func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) ([]string, string, error) {
+func (this *Segment) _execAction(script *Script, ctx Context, actions []*Action, says []string) ([]string, string, error) {
 	for _, action := range actions {
 		switch action.name {
 		case internal.CmdGoto:
@@ -186,15 +186,15 @@ func (this *Segment) _execAction(ctx Context, actions []*Action, says []string) 
 			return nil, "", nil
 		}
 
-		if err := action.exec(ctx); err != nil {
+		if err := action.exec(script, ctx); err != nil {
 			return nil, "", err
 		}
 	}
-	says = this.formatSay(ctx, says)
+	says = this.formatSay(script, ctx, says)
 	return says, "", nil
 }
 
-func (this *Segment) formatSay(ctx Context, says []string) []string {
+func (this *Segment) formatSay(script *Script, ctx Context, says []string) []string {
 	var nSays = make([]string, 0, len(says))
 	for _, say := range says {
 		var nSay = internal.RegexFormatParam.ReplaceAllStringFunc(say, func(s string) string {
@@ -203,7 +203,7 @@ func (this *Segment) formatSay(ctx Context, says []string) []string {
 			if formatCmd == nil {
 				return s
 			}
-			return formatCmd(ctx)
+			return formatCmd(script, ctx)
 		})
 		nSays = append(nSays, nSay)
 	}

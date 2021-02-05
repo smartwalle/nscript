@@ -37,17 +37,31 @@ func LoadFromText(text string) (*Script, error) {
 }
 
 func parseScript(iScript *internal.Script) (*Script, error) {
-	var functions = make(map[string]*Function)
+	var nScript = &Script{}
+	nScript.functions = make(map[string]*Function)
 	for _, iFunc := range iScript.Functions {
 		var nFunc = NewFunction(iFunc.Name)
 		if err := nFunc.parse(iFunc.Lines); err != nil {
 			return nil, err
 		}
-		functions[nFunc.name] = nFunc
+		nScript.functions[nFunc.name] = nFunc
+
+		if onLoadFunction != nil {
+			var matches = internal.RegexFunctionParam.FindStringSubmatch(nFunc.name)
+			var args string
+			if len(matches) > 1 {
+				args = matches[1]
+			}
+			onLoadFunction(nScript, nFunc.name, args)
+		}
 	}
-	var nScript = &Script{}
-	nScript.functions = functions
+
 	return nScript, nil
+}
+
+func (this *Script) Exists(name string) bool {
+	var _, exists = this.functions[name]
+	return exists
 }
 
 func (this *Script) Exec(name string, ctx Context) ([]string, error) {
@@ -66,7 +80,7 @@ func (this *Script) Exec(name string, ctx Context) ([]string, error) {
 		return nil, fmt.Errorf("not found function %s", name)
 	}
 
-	var says, nFunc, err = function.exec(ctx)
+	var says, nFunc, err = function.exec(this, ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -41,6 +41,11 @@ func parseInt64(v string) int64 {
 }
 
 func init() {
+	// 回调
+	nscript.OnLoadFunction(func(script *nscript.Script, name, arg string) {
+		fmt.Println(name, arg)
+	})
+
 	// 解析器
 	nscript.RegisterCommandParser("CHECKGOLD", func(params ...string) ([]interface{}, error) {
 		if len(params) != 2 {
@@ -81,18 +86,18 @@ func init() {
 	})
 
 	// 判断条件
-	nscript.RegisterCheckCommand("CHECKGOLD", func(ctx nscript.Context, params ...interface{}) (bool, error) {
+	nscript.RegisterCheckCommand("CHECKGOLD", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) (bool, error) {
 		var op = params[0].(string)
 		var value = params[1].(int64)
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64(op, nCtx.User.Gold, value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKGENDER", func(ctx nscript.Context, params ...interface{}) (bool, error) {
+	nscript.RegisterCheckCommand("CHECKGENDER", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) (bool, error) {
 		var value = params[0].(int64)
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64("=", int64(nCtx.User.Gender), value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKAGE", func(ctx nscript.Context, params ...interface{}) (bool, error) {
+	nscript.RegisterCheckCommand("CHECKAGE", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) (bool, error) {
 		var op = params[0].(string)
 		var value = params[1].(int64)
 		var nCtx = ctx.(*Context)
@@ -100,7 +105,7 @@ func init() {
 	})
 
 	// 操作
-	nscript.RegisterActionCommand("TAKEGOLD", func(ctx nscript.Context, params ...interface{}) error {
+	nscript.RegisterActionCommand("TAKEGOLD", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) error {
 		var nCtx = ctx.(*Context)
 		var gold = params[0].(int64)
 		if gold <= 0 || gold > nCtx.User.Gold {
@@ -111,11 +116,11 @@ func init() {
 	})
 
 	// 格式化
-	nscript.RegisterFormatCommand("$USERNAME", func(ctx nscript.Context) string {
+	nscript.RegisterFormatCommand("$USERNAME", func(script *nscript.Script, ctx nscript.Context) string {
 		var nCtx = ctx.(*Context)
 		return nCtx.User.Name
 	})
-	nscript.RegisterFormatCommand("$GOLD", func(ctx nscript.Context) string {
+	nscript.RegisterFormatCommand("$GOLD", func(script *nscript.Script, ctx nscript.Context) string {
 		var nCtx = ctx.(*Context)
 		return fmt.Sprintf("%d", nCtx.User.Gold)
 	})

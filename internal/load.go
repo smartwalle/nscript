@@ -18,6 +18,9 @@ var (
 	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
 	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 
+	// 从字符串 "(PARAM)" 中提取出 "PARAM"
+	RegexFunctionParam = regexp.MustCompile(`\(([\S]+)\)`)
+
 	// 从字符串 "<$PARAM>" 中提取出 "$PARAM"
 	RegexFormatParam = regexp.MustCompile(`\<(\$\w+)\>`)
 )
