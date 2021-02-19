@@ -14,20 +14,12 @@ CHECKGENDER 1
 先生你好
 #ELSESAY
 女士你好
-
-[TYPE]
-101
-102
-103
 `
 
 	script, err := nscript.LoadFromText(text)
 	if err != nil {
 		t.Fatal("加载脚本发生错误:", err)
 	}
-
-	t.Log(script.Value("TYPE"))
-	t.Log(script.Values("TYPE"))
 
 	var ctx = NewContext()
 	res, err := script.Exec("@MAIN", ctx)
