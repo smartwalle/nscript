@@ -1,0 +1,13 @@
+[@MAIN]
+#IF
+CHECKGOLD >= 1000
+#ACT
+GOTO @MOVE
+#ELSESAY
+没有足够的金币
+
+[@MOVE]
+#ACT
+TAKEGOLD 1000
+#SAY
+有钱就是好
