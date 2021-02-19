@@ -41,19 +41,25 @@ func parseScript(iScript *internal.Script) (*Script, error) {
 	var nScript = &Script{}
 	nScript.values = make(map[string][]string)
 	nScript.functions = make(map[string]*_Function)
-	for _, section := range iScript.Sections {
-		if section.Function {
-			if err := parseFunction(nScript, section); err != nil {
-				return nil, err
-			}
-		} else {
-			if err := parseValue(nScript, section); err != nil {
-				return nil, err
-			}
+
+	for _, section := range iScript.Values {
+		if err := parseValue(nScript, section); err != nil {
+			return nil, err
+		}
+	}
+
+	for _, section := range iScript.Functions {
+		if err := parseFunction(nScript, section); err != nil {
+			return nil, err
 		}
 	}
 
 	return nScript, nil
+}
+
+func parseValue(nScript *Script, section *internal.Section) error {
+	nScript.values[section.Name] = section.Lines
+	return nil
 }
 
 func parseFunction(nScript *Script, section *internal.Section) error {
@@ -71,11 +77,6 @@ func parseFunction(nScript *Script, section *internal.Section) error {
 		}
 		onLoadFunction(nScript, nFunc.name, args)
 	}
-	return nil
-}
-
-func parseValue(nScript *Script, section *internal.Section) error {
-	nScript.values[section.Name] = section.Lines
 	return nil
 }
 

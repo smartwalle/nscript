@@ -1,12 +1,14 @@
 package internal
 
 type Script struct {
-	Sections map[string]*Section
+	Values    map[string]*Section
+	Functions map[string]*Section
 }
 
 func NewScript() *Script {
 	var s = &Script{}
-	s.Sections = make(map[string]*Section)
+	s.Values = make(map[string]*Section)
+	s.Functions = make(map[string]*Section)
 	return s
 }
 
@@ -14,5 +16,9 @@ func (this *Script) Add(p *Section) {
 	if p == nil {
 		return
 	}
-	this.Sections[p.Name] = p
+	if p.Function {
+		this.Functions[p.Name] = p
+	} else {
+		this.Values[p.Name] = p
+	}
 }

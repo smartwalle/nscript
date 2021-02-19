@@ -17,7 +17,7 @@ CHECKGENDER 1
 
 [TYPE]
 101
-102  
+102
 103
 `
 
@@ -25,6 +25,9 @@ CHECKGENDER 1
 	if err != nil {
 		t.Fatal("加载脚本发生错误:", err)
 	}
+
+	t.Log(script.Value("TYPE"))
+	t.Log(script.Values("TYPE"))
 
 	var ctx = NewContext()
 	res, err := script.Exec("@MAIN", ctx)
