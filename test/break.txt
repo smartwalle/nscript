@@ -1,0 +1,30 @@
+[@MAIN]
+#IF
+CHECKGOLD < 1000
+#SAY
+金币不能低于 1000
+#ACT
+BREAK
+
+#IF
+CHECKLEVEL < 10
+#SAY
+等级不能低于 10 级
+#ACT
+BREAK
+
+#IF
+CHECKGENDER 1
+#SAY
+不支持男性
+#ACT
+BREAK
+
+#IF
+CHECKAGE >= 18
+#ACT
+SETAGE 16
+#SAY
+永葆青春
+#ELSESAY
+不要太贪心

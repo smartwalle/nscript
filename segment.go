@@ -166,32 +166,37 @@ func (this *Segment) hasElseBranch() bool {
 	return len(this.elseActions) > 0 || len(this.elseSays) > 0
 }
 
-func (this *Segment) execAction(script *Script, ctx Context) ([]string, string, error) {
+func (this *Segment) execAction(script *Script, ctx Context) (bool, []string, string, error) {
 	return this._execAction(script, ctx, this.actions, this.says)
 }
 
-func (this *Segment) execElseAction(script *Script, ctx Context) ([]string, string, error) {
+func (this *Segment) execElseAction(script *Script, ctx Context) (bool, []string, string, error) {
 	return this._execAction(script, ctx, this.elseActions, this.elseSays)
 }
 
-func (this *Segment) _execAction(script *Script, ctx Context, actions []*Action, says []string) ([]string, string, error) {
+func (this *Segment) _execAction(script *Script, ctx Context, actions []*Action, says []string) (bool, []string, string, error) {
+	var nBreak bool
 	for _, action := range actions {
 		switch action.name {
 		case internal.CmdGoto:
 			if len(action.params) < 1 {
-				return nil, "", errors.New("syntax error: invalid args for GOTO")
+				return false, nil, "", errors.New("syntax error: invalid args for GOTO")
 			}
-			return nil, action.params[0].(string), nil
+			return false, nil, action.params[0].(string), nil
 		case internal.CmdBreak:
-			return nil, "", nil
+			nBreak = true
+		}
+
+		if nBreak {
+			break
 		}
 
 		if err := action.exec(script, ctx); err != nil {
-			return nil, "", err
+			return false, nil, "", err
 		}
 	}
 	says = this.formatSay(script, ctx, says)
-	return says, "", nil
+	return nBreak, says, "", nil
 }
 
 func (this *Segment) formatSay(script *Script, ctx Context, says []string) []string {

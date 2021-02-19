@@ -16,9 +16,10 @@ const (
 
 type User struct {
 	Name   string
-	Age    int
+	Age    int64
 	Gender Gender
 	Gold   int64
+	Level  int64
 }
 
 type Context struct {
@@ -32,6 +33,7 @@ func NewContext() *Context {
 	c.User.Age = 18
 	c.User.Gender = Male
 	c.User.Gold = 10000
+	c.User.Level = 1
 	return c
 }
 
@@ -76,9 +78,28 @@ func init() {
 		return nParams, nil
 	})
 
+	nscript.RegisterCommandParser("CHECKLEVEL", func(params ...string) ([]interface{}, error) {
+		if len(params) != 2 {
+			return nil, errors.New("CHECKLEVEL 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = params[0]
+		nParams[1] = parseInt64(params[1])
+		return nParams, nil
+	})
+
 	nscript.RegisterCommandParser("TAKEGOLD", func(params ...string) ([]interface{}, error) {
 		if len(params) != 1 {
 			return nil, errors.New("TAKEGOLD 指令参数异常")
+		}
+		var nParams = make([]interface{}, len(params))
+		nParams[0] = parseInt64(params[0])
+		return nParams, nil
+	})
+
+	nscript.RegisterCommandParser("SETAGE", func(params ...string) ([]interface{}, error) {
+		if len(params) != 1 {
+			return nil, errors.New("SETAGE 指令参数异常")
 		}
 		var nParams = make([]interface{}, len(params))
 		nParams[0] = parseInt64(params[0])
@@ -103,6 +124,12 @@ func init() {
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64(op, int64(nCtx.User.Age), value), nil
 	})
+	nscript.RegisterCheckCommand("CHECKLEVEL", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) (bool, error) {
+		var op = params[0].(string)
+		var value = params[1].(int64)
+		var nCtx = ctx.(*Context)
+		return nscript.CompareInt64(op, nCtx.User.Level, value), nil
+	})
 
 	// 操作
 	nscript.RegisterActionCommand("TAKEGOLD", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) error {
@@ -112,6 +139,12 @@ func init() {
 			return errors.New("没有足够的金币")
 		}
 		nCtx.User.Gold -= gold
+		return nil
+	})
+	nscript.RegisterActionCommand("SETAGE", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) error {
+		var nCtx = ctx.(*Context)
+		var age = params[0].(int64)
+		nCtx.User.Age = age
 		return nil
 	})
 

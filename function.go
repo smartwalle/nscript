@@ -54,19 +54,30 @@ func (this *Function) parse(lines []string) error {
 }
 
 func (this *Function) exec(script *Script, ctx Context) ([]string, string, error) {
+	var nBreak bool    // 是否 break
+	var nSays []string // 输出内容
+	var nGoto string   // 是否需要执行到其它方法
+	var err error
+	var ok bool
+
 	for _, seg := range this.segments {
-		var ok, err = seg.check(script, ctx)
+		ok, err = seg.check(script, ctx)
 		if err != nil {
 			// 若有错误，返回错误
 			return nil, "", err
 		}
+
 		if ok {
 			// 执行 Action
-			return seg.execAction(script, ctx)
+			nBreak, nSays, nGoto, err = seg.execAction(script, ctx)
 		} else if seg.hasElseBranch() {
 			// 执行 ElseAction
-			return seg.execElseAction(script, ctx)
+			nBreak, nSays, nGoto, err = seg.execElseAction(script, ctx)
+		}
+
+		if err != nil || nGoto != "" || nBreak {
+			return nSays, nGoto, err
 		}
 	}
-	return nil, "", nil
+	return nSays, "", nil
 }
