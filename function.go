@@ -56,9 +56,9 @@ func (this *Function) parse(lines []string) error {
 func (this *Function) exec(script *Script, ctx Context) ([]string, string, error) {
 	var nBreak bool    // 是否 break
 	var nSays []string // 输出内容
-	var nGoto string   // 是否需要执行到其它方法
+	var nGoto string   // 是否需要跳转到其它方法
+	var ok bool        // 条件判断结果
 	var err error
-	var ok bool
 
 	for _, seg := range this.segments {
 		ok, err = seg.check(script, ctx)
