@@ -5,24 +5,24 @@ import (
 	"strings"
 )
 
-type Function struct {
+type _Function struct {
 	name     string
-	segments []*Segment
+	segments []*_Segment
 }
 
-func NewFunction(name string) *Function {
-	var f = &Function{}
+func _NewFunction(name string) *_Function {
+	var f = &_Function{}
 	f.name = name
 	return f
 }
 
-func (this *Function) parse(lines []string) error {
+func (this *_Function) parse(lines []string) error {
 	var sLines []string
 	for idx, line := range lines {
 		if idx != 0 && strings.HasPrefix(line, internal.KeyIf) {
 			// 如果不是第一行，并且又发现了 #IF
 			// 则表示一个代码片断结束了，需要开启新的代码片断
-			var nSegment = NewSegment()
+			var nSegment = _NewSegment()
 			if err := nSegment.parse(sLines); err != nil {
 				return err
 			}
@@ -43,7 +43,7 @@ func (this *Function) parse(lines []string) error {
 		sLines = append(sLines, line)
 	}
 	if len(sLines) > 0 {
-		var nSegment = NewSegment()
+		var nSegment = _NewSegment()
 		if err := nSegment.parse(sLines); err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func (this *Function) parse(lines []string) error {
 	return nil
 }
 
-func (this *Function) exec(script *Script, ctx Context) ([]string, string, error) {
+func (this *_Function) exec(script *Script, ctx Context) ([]string, string, error) {
 	var nBreak bool    // 是否 break
 	var nSays []string // 输出内容
 	var nGoto string   // 是否需要跳转到其它方法
@@ -68,7 +68,7 @@ func (this *Function) exec(script *Script, ctx Context) ([]string, string, error
 		}
 
 		if ok {
-			// 执行 Action
+			// 执行 _Action
 			nBreak, nSays, nGoto, err = seg.execAction(script, ctx)
 		} else if seg.hasElseBranch() {
 			// 执行 ElseAction
