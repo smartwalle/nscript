@@ -9,7 +9,7 @@ type Section struct {
 func NewSection(name string) *Section {
 	return &Section{
 		Name:     ToUpper(name),
-		Function: name[0] == '@',
+		Function: name[0] == FunctionPrefix,
 	}
 }
 

@@ -14,6 +14,11 @@ CHECKGENDER 1
 先生你好
 #ELSESAY
 女士你好
+
+[TYPE]
+101
+102  
+103
 `
 
 	script, err := nscript.LoadFromText(text)

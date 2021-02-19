@@ -17,6 +17,8 @@ const (
 
 const (
 	KeyPrefix = '#'
+
+	FunctionPrefix = '@'
 )
 
 // 关键字

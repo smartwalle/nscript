@@ -8,6 +8,7 @@ import (
 )
 
 type Script struct {
+	values    map[string][]string
 	functions map[string]*Function
 }
 
@@ -38,10 +39,15 @@ func LoadFromText(text string) (*Script, error) {
 
 func parseScript(iScript *internal.Script) (*Script, error) {
 	var nScript = &Script{}
+	nScript.values = make(map[string][]string)
 	nScript.functions = make(map[string]*Function)
 	for _, section := range iScript.Sections {
 		if section.Function {
 			if err := parseFunction(nScript, section); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := parseValue(nScript, section); err != nil {
 				return nil, err
 			}
 		}
@@ -65,6 +71,11 @@ func parseFunction(nScript *Script, section *internal.Section) error {
 		}
 		onLoadFunction(nScript, nFunc.name, args)
 	}
+	return nil
+}
+
+func parseValue(nScript *Script, section *internal.Section) error {
+	nScript.values[section.Name] = section.Lines
 	return nil
 }
 
@@ -100,4 +111,16 @@ func (this *Script) Exec(name string, ctx Context) ([]string, error) {
 	}
 
 	return says, nil
+}
+
+func (this *Script) Value(key string) string {
+	var values = this.values[key]
+	if len(values) > 0 {
+		return values[0]
+	}
+	return ""
+}
+
+func (this *Script) Values(key string) []string {
+	return this.values[key]
 }
