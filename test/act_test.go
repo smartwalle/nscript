@@ -14,8 +14,8 @@ func Test_Act(t *testing.T) {
 	var ctx = NewContext()
 
 	var testTbl = []struct {
-		before int64
-		after  int64
+		gold   int64
+		nGold  int64
 		expect string
 	}{
 		{1001, 1, "谢谢老板"},
@@ -24,7 +24,7 @@ func Test_Act(t *testing.T) {
 	}
 
 	for _, test := range testTbl {
-		ctx.User.Gold = test.before
+		ctx.User.Gold = test.gold
 
 		res, err := script.Exec("@MAIN", ctx)
 		if err != nil {
@@ -40,8 +40,8 @@ func Test_Act(t *testing.T) {
 			t.Fatal("脚本结果不符合预期, 期望结果:", test.expect, "实际结果:", actual)
 		}
 
-		if ctx.User.Gold != test.after {
-			t.Fatal("剩余数量不符合预期, 期望结果:", test.after, "实际结果:", ctx.User.Gold)
+		if ctx.User.Gold != test.nGold {
+			t.Fatal("剩余数量不符合预期, 期望结果:", test.nGold, "实际结果:", ctx.User.Gold)
 		}
 	}
 }
