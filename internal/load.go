@@ -42,29 +42,29 @@ func Load(r io.Reader) (*Script, error) {
 		return nil, err
 	}
 
-	var f *Function
+	var s *Section
 	var script = NewScript()
 
 	for _, line := range lines {
 		if line[0] == '[' {
 			var match = RegexFunctionName.FindStringSubmatch(line)
 			if len(match) > 0 {
-				if f != nil {
-					script.Add(f)
+				if s != nil {
+					script.Add(s)
 				}
 
-				f = NewFunction(match[1])
+				s = NewSection(match[1])
 				continue
 			}
 		}
 
-		if f != nil {
-			f.Add(line)
+		if s != nil {
+			s.Add(line)
 		}
 	}
 
-	if f != nil {
-		script.Add(f)
+	if s != nil {
+		script.Add(s)
 	}
 
 	return script, nil

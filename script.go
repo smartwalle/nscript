@@ -39,24 +39,33 @@ func LoadFromText(text string) (*Script, error) {
 func parseScript(iScript *internal.Script) (*Script, error) {
 	var nScript = &Script{}
 	nScript.functions = make(map[string]*Function)
-	for _, iFunc := range iScript.Functions {
-		var nFunc = NewFunction(iFunc.Name)
-		if err := nFunc.parse(iFunc.Lines); err != nil {
-			return nil, err
-		}
-		nScript.functions[nFunc.name] = nFunc
-
-		if onLoadFunction != nil {
-			var matches = internal.RegexFunctionParam.FindStringSubmatch(nFunc.name)
-			var args string
-			if len(matches) > 1 {
-				args = matches[1]
+	for _, section := range iScript.Sections {
+		if section.Function {
+			if err := parseFunction(nScript, section); err != nil {
+				return nil, err
 			}
-			onLoadFunction(nScript, nFunc.name, args)
 		}
 	}
 
 	return nScript, nil
+}
+
+func parseFunction(nScript *Script, section *internal.Section) error {
+	var nFunc = NewFunction(section.Name)
+	if err := nFunc.parse(section.Lines); err != nil {
+		return err
+	}
+	nScript.functions[nFunc.name] = nFunc
+
+	if onLoadFunction != nil {
+		var matches = internal.RegexFunctionParam.FindStringSubmatch(nFunc.name)
+		var args string
+		if len(matches) > 1 {
+			args = matches[1]
+		}
+		onLoadFunction(nScript, nFunc.name, args)
+	}
+	return nil
 }
 
 func (this *Script) Exists(name string) bool {

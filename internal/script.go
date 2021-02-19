@@ -1,25 +1,18 @@
 package internal
 
 type Script struct {
-	Functions map[string]*Function
+	Sections map[string]*Section
 }
 
 func NewScript() *Script {
 	var s = &Script{}
-	s.Functions = make(map[string]*Function)
+	s.Sections = make(map[string]*Section)
 	return s
 }
 
-func (this *Script) Add(p *Function) {
+func (this *Script) Add(p *Section) {
 	if p == nil {
 		return
 	}
-	this.Functions[p.Name] = p
-}
-
-func (this *Script) Take(name string) *Function {
-	name = ToUpper(name)
-	var f = this.Functions[name]
-	delete(this.Functions, name)
-	return f
+	this.Sections[p.Name] = p
 }
