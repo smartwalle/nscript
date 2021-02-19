@@ -79,7 +79,7 @@ func (this *Segment) parseCheck(line string) error {
 		params = parts[1:]
 	}
 
-	var cmdParser = GetCommandParser(name)
+	var cmdParser = getCommandParser(name)
 	nParams, err := cmdParser(params...)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func (this *Segment) _parseAction(line string) (*Action, error) {
 		params = parts[1:]
 	}
 
-	var cmdParser = GetCommandParser(name)
+	var cmdParser = getCommandParser(name)
 	nParams, err := cmdParser(params...)
 	if err != nil {
 		return nil, err
@@ -204,7 +204,7 @@ func (this *Segment) formatSay(script *Script, ctx Context, says []string) []str
 	for _, say := range says {
 		var nSay = internal.RegexFormatParam.ReplaceAllStringFunc(say, func(s string) string {
 			var key = s[1 : len(s)-1]
-			var formatCmd = GetFormatCommand(key)
+			var formatCmd = getFormatCommand(key)
 			if formatCmd == nil {
 				return s
 			}

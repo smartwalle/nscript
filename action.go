@@ -15,7 +15,7 @@ func NewAction(name string, params []interface{}) *Action {
 }
 
 func (this *Action) exec(script *Script, ctx Context) error {
-	var cmd = GetActionCommand(this.name)
+	var cmd = getActionCommand(this.name)
 	if cmd == nil {
 		return fmt.Errorf("not found action command %s", this.name)
 	}

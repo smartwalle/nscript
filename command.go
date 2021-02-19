@@ -38,7 +38,7 @@ func RegisterCommandParser(name string, f CommandParser) {
 	commandParsers[name] = f
 }
 
-func GetCommandParser(name string) CommandParser {
+func getCommandParser(name string) CommandParser {
 	name = internal.ToUpper(name)
 	var f = commandParsers[name]
 	if f == nil {
@@ -56,7 +56,7 @@ func RegisterCheckCommand(name string, f CheckCommand) {
 	checkCommands[name] = f
 }
 
-func GetCheckCommand(name string) CheckCommand {
+func getCheckCommand(name string) CheckCommand {
 	name = internal.ToUpper(name)
 	return checkCommands[name]
 }
@@ -70,7 +70,7 @@ func RegisterActionCommand(name string, f ActionCommand) {
 	actionCommands[name] = f
 }
 
-func GetActionCommand(name string) ActionCommand {
+func getActionCommand(name string) ActionCommand {
 	name = internal.ToUpper(name)
 	return actionCommands[name]
 }
@@ -84,7 +84,7 @@ func RegisterFormatCommand(name string, f FormatCommand) {
 	formatCommands[name] = f
 }
 
-func GetFormatCommand(name string) FormatCommand {
+func getFormatCommand(name string) FormatCommand {
 	name = internal.ToUpper(name)
 	return formatCommands[name]
 }

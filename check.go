@@ -15,7 +15,7 @@ func NewCheck(name string, params []interface{}) *Check {
 }
 
 func (this *Check) exec(script *Script, ctx Context) (bool, error) {
-	var cmd = GetCheckCommand(this.name)
+	var cmd = getCheckCommand(this.name)
 	if cmd == nil {
 		return false, fmt.Errorf("not found check command %s", this.name)
 	}
