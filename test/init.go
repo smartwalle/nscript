@@ -122,7 +122,7 @@ func init() {
 		var op = params[0].(string)
 		var value = params[1].(int64)
 		var nCtx = ctx.(*Context)
-		return nscript.CompareInt64(op, int64(nCtx.User.Age), value), nil
+		return nscript.CompareInt64(op, nCtx.User.Age, value), nil
 	})
 	nscript.RegisterCheckCommand("CHECKLEVEL", func(script *nscript.Script, ctx nscript.Context, params ...interface{}) (bool, error) {
 		var op = params[0].(string)
