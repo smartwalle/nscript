@@ -80,6 +80,14 @@ func parseFunction(nScript *Script, section *internal.Section) error {
 	return nil
 }
 
+func (this *Script) Functions() []string {
+	var fList = make([]string, 0, len(this.functions))
+	for key := range this.functions {
+		fList = append(fList, key)
+	}
+	return fList
+}
+
 func (this *Script) FunctionExists(name string) bool {
 	var _, exists = this.functions[name]
 	return exists
