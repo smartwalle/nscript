@@ -2,19 +2,19 @@ package nscript
 
 import "fmt"
 
-type Check struct {
+type inCheck struct {
 	name   string
 	params []interface{}
 }
 
-func NewCheck(name string, params []interface{}) *Check {
-	var c = &Check{}
+func inNewCheck(name string, params []interface{}) *inCheck {
+	var c = &inCheck{}
 	c.name = name
 	c.params = params
 	return c
 }
 
-func (this *Check) exec(script *Script, ctx Context) (bool, error) {
+func (this *inCheck) exec(script *Script, ctx Context) (bool, error) {
 	var cmd = getCheckCommand(this.name)
 	if cmd == nil {
 		return false, fmt.Errorf("not found check command %s", this.name)

@@ -6,21 +6,21 @@ import (
 	"github.com/smartwalle/nscript/internal"
 )
 
-type Segment struct {
-	checks      []*Check
-	actions     []*Action
-	elseActions []*Action
+type inSegment struct {
+	checks      []*inCheck
+	actions     []*inAction
+	elseActions []*inAction
 
 	says     []string
 	elseSays []string
 }
 
-func NewSegment() *Segment {
-	var s = &Segment{}
+func inNewSegment() *inSegment {
+	var s = &inSegment{}
 	return s
 }
 
-func (this *Segment) parse(lines []string) error {
+func (this *inSegment) parse(lines []string) error {
 	var keyword string
 
 	for _, line := range lines {
@@ -68,7 +68,7 @@ func (this *Segment) parse(lines []string) error {
 	return nil
 }
 
-func (this *Segment) parseCheck(line string) error {
+func (this *inSegment) parseCheck(line string) error {
 	var parts = internal.Split(line, " ")
 	if len(parts) == 0 {
 		return nil
@@ -85,12 +85,12 @@ func (this *Segment) parseCheck(line string) error {
 		return err
 	}
 
-	var check = NewCheck(name, nParams)
+	var check = inNewCheck(name, nParams)
 	this.checks = append(this.checks, check)
 	return nil
 }
 
-func (this *Segment) parseAction(line string) error {
+func (this *inSegment) parseAction(line string) error {
 	var action, err = this._parseAction(line)
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func (this *Segment) parseAction(line string) error {
 	return nil
 }
 
-func (this *Segment) parseElseAction(line string) error {
+func (this *inSegment) parseElseAction(line string) error {
 	var action, err = this._parseAction(line)
 	if err != nil {
 		return err
@@ -112,7 +112,7 @@ func (this *Segment) parseElseAction(line string) error {
 	return nil
 }
 
-func (this *Segment) _parseAction(line string) (*Action, error) {
+func (this *inSegment) _parseAction(line string) (*inAction, error) {
 	var parts = internal.Split(line, " ")
 	if len(parts) == 0 {
 		return nil, nil
@@ -128,21 +128,21 @@ func (this *Segment) _parseAction(line string) (*Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	var action = NewAction(name, nParams)
+	var action = inNewAction(name, nParams)
 	return action, nil
 }
 
-func (this *Segment) parseSay(line string) error {
+func (this *inSegment) parseSay(line string) error {
 	this.says = append(this.says, line)
 	return nil
 }
 
-func (this *Segment) parseElseSay(line string) error {
+func (this *inSegment) parseElseSay(line string) error {
 	this.elseSays = append(this.elseSays, line)
 	return nil
 }
 
-func (this *Segment) check(script *Script, ctx Context) (bool, error) {
+func (this *inSegment) check(script *Script, ctx Context) (bool, error) {
 	for _, check := range this.checks {
 		ok, err := check.exec(script, ctx)
 		if err != nil {
@@ -158,23 +158,23 @@ func (this *Segment) check(script *Script, ctx Context) (bool, error) {
 	return true, nil
 }
 
-func (this *Segment) hasMainBranch() bool {
+func (this *inSegment) hasMainBranch() bool {
 	return len(this.actions) > 0 || len(this.says) > 0
 }
 
-func (this *Segment) hasElseBranch() bool {
+func (this *inSegment) hasElseBranch() bool {
 	return len(this.elseActions) > 0 || len(this.elseSays) > 0
 }
 
-func (this *Segment) execAction(script *Script, ctx Context) (bool, []string, string, error) {
+func (this *inSegment) execAction(script *Script, ctx Context) (bool, []string, string, error) {
 	return this._execAction(script, ctx, this.actions, this.says)
 }
 
-func (this *Segment) execElseAction(script *Script, ctx Context) (bool, []string, string, error) {
+func (this *inSegment) execElseAction(script *Script, ctx Context) (bool, []string, string, error) {
 	return this._execAction(script, ctx, this.elseActions, this.elseSays)
 }
 
-func (this *Segment) _execAction(script *Script, ctx Context, actions []*Action, says []string) (bool, []string, string, error) {
+func (this *inSegment) _execAction(script *Script, ctx Context, actions []*inAction, says []string) (bool, []string, string, error) {
 	var nBreak bool
 	for _, action := range actions {
 		switch action.name {
@@ -199,7 +199,7 @@ func (this *Segment) _execAction(script *Script, ctx Context, actions []*Action,
 	return nBreak, says, "", nil
 }
 
-func (this *Segment) formatSay(script *Script, ctx Context, says []string) []string {
+func (this *inSegment) formatSay(script *Script, ctx Context, says []string) []string {
 	var nSays = make([]string, 0, len(says))
 	for _, say := range says {
 		var nSay = internal.RegexFormatParam.ReplaceAllStringFunc(say, func(s string) string {

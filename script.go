@@ -9,7 +9,7 @@ import (
 
 type Script struct {
 	values    map[string][]string
-	functions map[string]*Function
+	functions map[string]*inFunction
 }
 
 func NewScript(file string) (*Script, error) {
@@ -40,7 +40,7 @@ func LoadFromText(text string) (*Script, error) {
 func parseScript(iScript *internal.Script) (*Script, error) {
 	var nScript = &Script{}
 	nScript.values = make(map[string][]string)
-	nScript.functions = make(map[string]*Function)
+	nScript.functions = make(map[string]*inFunction)
 
 	for _, section := range iScript.Values {
 		if err := parseValue(nScript, section); err != nil {
@@ -63,7 +63,7 @@ func parseValue(nScript *Script, section *internal.Section) error {
 }
 
 func parseFunction(nScript *Script, section *internal.Section) error {
-	var nFunc = NewFunction(section.Name)
+	var nFunc = inNewFunction(section.Name)
 	if err := nFunc.parse(section.Lines); err != nil {
 		return err
 	}
