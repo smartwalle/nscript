@@ -213,6 +213,8 @@ func (this *inSegment) formatSay(script *Script, ctx Context, says []string) []s
 				param = matches[2]
 			}
 
+			fmt.Println(key, param, matches)
+
 			var formatCmd = getFormatCommand(key)
 			if formatCmd == nil {
 				return s
