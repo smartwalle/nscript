@@ -202,13 +202,22 @@ func (this *inSegment) _execAction(script *Script, ctx Context, actions []*inAct
 func (this *inSegment) formatSay(script *Script, ctx Context, says []string) []string {
 	var nSays = make([]string, 0, len(says))
 	for _, say := range says {
-		var nSay = internal.RegexFormatParam.ReplaceAllStringFunc(say, func(s string) string {
+		var nSay = internal.RegexFormat.ReplaceAllStringFunc(say, func(s string) string {
 			var key = s[1 : len(s)-1]
+
+			var param string
+			var matches = internal.RegexFormatParam.FindStringSubmatch(key)
+
+			if len(matches) == 3 {
+				key = matches[1]
+				param = matches[2]
+			}
+
 			var formatCmd = getFormatCommand(key)
 			if formatCmd == nil {
 				return s
 			}
-			return formatCmd(script, ctx)
+			return formatCmd(script, ctx, param)
 		})
 		nSays = append(nSays, nSay)
 	}

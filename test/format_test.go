@@ -33,7 +33,7 @@ func Test_Format(t *testing.T) {
 	for _, test := range testTbl {
 		ctx.User.Name = test.name
 		ctx.User.Gold = test.gold
-		test.expect = fmt.Sprintf("你好 {{%s/RED}}, 你有 %d 金币, {这个不匹配, 我要<Exit/@EXIT>}", test.name, test.gold)
+		test.expect = fmt.Sprintf("你好 {{%s/RED}}, 你有 %d(个) 金币, {这个不匹配, 我要<Exit/@EXIT>}", test.name, test.gold)
 
 		res, err := script.Exec("@MAIN", ctx)
 		if err != nil {

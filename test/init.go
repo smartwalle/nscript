@@ -149,12 +149,12 @@ func init() {
 	})
 
 	// 格式化
-	nscript.RegisterFormatCommand("$USERNAME", func(script *nscript.Script, ctx nscript.Context) string {
+	nscript.RegisterFormatCommand("$USERNAME", func(script *nscript.Script, ctx nscript.Context, param string) string {
 		var nCtx = ctx.(*Context)
 		return nCtx.User.Name
 	})
-	nscript.RegisterFormatCommand("$GOLD", func(script *nscript.Script, ctx nscript.Context) string {
+	nscript.RegisterFormatCommand("$GOLD", func(script *nscript.Script, ctx nscript.Context, param string) string {
 		var nCtx = ctx.(*Context)
-		return fmt.Sprintf("%d", nCtx.User.Gold)
+		return fmt.Sprintf("%d(%s)", nCtx.User.Gold, param)
 	})
 }

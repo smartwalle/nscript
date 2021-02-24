@@ -22,7 +22,10 @@ var (
 	RegexFunctionParam = regexp.MustCompile(`\(([\S]+)\)`)
 
 	// 从字符串 "<$PARAM>" 中提取出 "$PARAM"
-	RegexFormatParam = regexp.MustCompile(`\<(\$\w+)\>`)
+	RegexFormat = regexp.MustCompile(`\<(\$\S+)\>`)
+
+	// 从字符串 "$KEY(PARAM)" 中提取出 "$KEY" 和 PARAM
+	RegexFormatParam = regexp.MustCompile(`(\$[^\(\)]+)\((\S)\)`)
 )
 
 func LoadFile(file string) (*Script, error) {
