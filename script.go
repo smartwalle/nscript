@@ -68,15 +68,6 @@ func parseFunction(nScript *Script, section *internal.Section) error {
 		return err
 	}
 	nScript.functions[nFunc.name] = nFunc
-
-	if onLoadFunction != nil {
-		var matches = internal.RegexFunctionParam.FindStringSubmatch(nFunc.name)
-		var args string
-		if len(matches) > 1 {
-			args = matches[1]
-		}
-		onLoadFunction(nScript, nFunc.name, args)
-	}
 	return nil
 }
 

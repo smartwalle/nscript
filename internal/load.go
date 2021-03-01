@@ -19,7 +19,7 @@ var (
 	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 
 	// 从字符串 "(PARAM)" 中提取出 "PARAM"
-	RegexFunctionParam = regexp.MustCompile(`\(([\S]+)\)`)
+	//RegexFunctionParam = regexp.MustCompile(`\(([\S]+)\)`)
 
 	// 从字符串 "<$PARAM>" 中提取出 "$PARAM"
 	RegexFormat = regexp.MustCompile(`\<(\$[^<>]+)\>`)

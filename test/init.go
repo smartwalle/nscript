@@ -43,11 +43,6 @@ func parseInt64(v string) int64 {
 }
 
 func init() {
-	// 回调
-	nscript.OnLoadFunction(func(script *nscript.Script, name, arg string) {
-		fmt.Println("Load Function:", name, arg)
-	})
-
 	// 解析器
 	nscript.RegisterCommandParser("CHECKGOLD", func(params ...string) ([]interface{}, error) {
 		if len(params) != 2 {
