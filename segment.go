@@ -59,6 +59,9 @@ func (this *inSegment) parse(lines []string) error {
 		default:
 			if keyword == "" {
 				keyword = internal.KeySay
+				if err := this.parseSay(line); err != nil {
+					return err
+				}
 				continue
 			}
 			return fmt.Errorf("not found keyword %s", keyword)
