@@ -143,18 +143,21 @@ func (this *Script) Var(ctx Context, key string) string {
 	if key[0] != '$' {
 		return key
 	}
+	return this.getVar(ctx, key, key)
+}
 
+func (this *Script) getVar(ctx Context, key, dValue string) string {
 	var param string
-	var matches = internal.RegexVar.FindStringSubmatch(key)
-
-	if len(matches) == 3 {
-		key = matches[1]
-		param = matches[2]
+	//var matches = internal.RegexVar.FindStringSubmatch(key)
+	var idx = strings.IndexByte(key, '|')
+	if idx > -1 {
+		param = key[idx+1:]
+		key = key[0:idx]
 	}
 
 	var varCmd = getVarCommand(key)
 	if varCmd == nil {
-		return key
+		return dValue
 	}
 	return varCmd(this, ctx, param)
 }

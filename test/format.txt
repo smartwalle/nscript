@@ -1,4 +1,4 @@
 [@MAIN]
 #SAY
-你好 {{<$USERNAME>/RED}}, 你有 <$GOLD(个)> 金币, {这个不匹配, 我要<Exit/@EXIT>}
+你好 {{<$USERNAME>/RED}}, 你有 <$GOLD|个> 金币, {这个不匹配, 我要<Exit/@EXIT>}
 ; 输出内容为：你好 {{名字1/RED}}, 你有 90000(个) 金币, {这个不匹配, 我要<Exit/@EXIT>}
