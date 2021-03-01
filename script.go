@@ -138,3 +138,23 @@ func (this *Script) Value(key string) string {
 func (this *Script) Values(key string) []string {
 	return this.values[key]
 }
+
+func (this *Script) Var(ctx Context, key string) string {
+	if key[0] != '$' {
+		return key
+	}
+
+	var param string
+	var matches = internal.RegexVar.FindStringSubmatch(key)
+
+	if len(matches) == 3 {
+		key = matches[1]
+		param = matches[2]
+	}
+
+	var varCmd = getVarCommand(key)
+	if varCmd == nil {
+		return key
+	}
+	return varCmd(this, ctx, param)
+}

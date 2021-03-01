@@ -18,8 +18,8 @@ var checkCommands = make(map[string]CheckCommand)
 // 操作指令：用于在 #ACT 和 #ELSEACT 语句块中执行具体的操作，当其返回的 error 不为空时，该 error 将会返回给调用者。
 var actionCommands = make(map[string]ActionCommand)
 
-// 格式化指令：用于在 #SAY 和 #ELSESAY 语句块中对输出的内容进行格式化操作。
-var formatCommands = make(map[string]FormatCommand)
+// 变量指令：用于定义在 #SAY 和 #ELSESAY 语句块输出的动态内容。
+var varCommands = make(map[string]FormatCommand)
 
 var defaultCommandParser = func(params ...string) ([]interface{}, error) {
 	var nParams = make([]interface{}, 0, len(params))
@@ -75,16 +75,16 @@ func getActionCommand(name string) ActionCommand {
 	return actionCommands[name]
 }
 
-func RegisterFormatCommand(name string, f FormatCommand) {
+func RegisterVarCommand(name string, f FormatCommand) {
 	name = internal.ToUpper(name)
 
 	if name == "" || f == nil {
 		return
 	}
-	formatCommands[name] = f
+	varCommands[name] = f
 }
 
-func getFormatCommand(name string) FormatCommand {
+func getVarCommand(name string) FormatCommand {
 	name = internal.ToUpper(name)
-	return formatCommands[name]
+	return varCommands[name]
 }

@@ -25,7 +25,7 @@ var (
 	RegexFormat = regexp.MustCompile(`\<(\$[^<>]+)\>`)
 
 	// 从字符串 "$KEY(PARAM)" 中提取出 "$KEY" 和 PARAM
-	RegexFormatParam = regexp.MustCompile(`(\$[^\(\)]+)\((\S+)\)`)
+	RegexVar = regexp.MustCompile(`(\$[^\(\)]+)\((\S+)\)`)
 )
 
 func LoadFile(file string) (*Script, error) {

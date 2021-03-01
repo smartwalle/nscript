@@ -209,18 +209,18 @@ func (this *inSegment) formatSay(script *Script, ctx Context, says []string) []s
 			var key = s[1 : len(s)-1]
 
 			var param string
-			var matches = internal.RegexFormatParam.FindStringSubmatch(key)
+			var matches = internal.RegexVar.FindStringSubmatch(key)
 
 			if len(matches) == 3 {
 				key = matches[1]
 				param = matches[2]
 			}
 
-			var formatCmd = getFormatCommand(key)
-			if formatCmd == nil {
+			var varCmd = getVarCommand(key)
+			if varCmd == nil {
 				return s
 			}
-			return formatCmd(script, ctx, param)
+			return varCmd(script, ctx, param)
 		})
 		nSays = append(nSays, nSay)
 	}
