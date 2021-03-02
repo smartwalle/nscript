@@ -8,7 +8,7 @@ import (
 )
 
 type Script struct {
-	values    map[string][]string
+	vars      map[string][]string
 	functions map[string]*inFunction
 }
 
@@ -39,7 +39,7 @@ func LoadFromText(text string) (*Script, error) {
 
 func parseScript(iScript *internal.Script) (*Script, error) {
 	var nScript = &Script{}
-	nScript.values = make(map[string][]string)
+	nScript.vars = make(map[string][]string)
 	nScript.functions = make(map[string]*inFunction)
 
 	for _, section := range iScript.Values {
@@ -58,7 +58,7 @@ func parseScript(iScript *internal.Script) (*Script, error) {
 }
 
 func parseValue(nScript *Script, section *internal.Section) error {
-	nScript.values[section.Name] = section.Lines
+	nScript.vars[section.Name] = section.Lines
 	return nil
 }
 
@@ -113,42 +113,41 @@ func (this *Script) Exec(name string, ctx Context) ([]string, error) {
 	return says, nil
 }
 
-func (this *Script) ValueExists(key string) bool {
-	var _, exists = this.values[key]
+func (this *Script) VarExists(key string) bool {
+	var _, exists = this.vars[key]
 	return exists
 }
 
-func (this *Script) Value(key string) string {
-	var values = this.values[key]
+func (this *Script) Var(key string) string {
+	var values = this.vars[key]
 	if len(values) > 0 {
 		return values[0]
 	}
 	return ""
 }
 
-func (this *Script) Values(key string) []string {
-	return this.values[key]
+func (this *Script) Vars(key string) []string {
+	return this.vars[key]
 }
 
-func (this *Script) Var(ctx Context, key string) string {
+func (this *Script) Value(ctx Context, key string) string {
 	if key[0] != '$' {
 		return key
 	}
-	return this.getVar(ctx, key, key)
+	return this.getValue(ctx, key, key)
 }
 
-func (this *Script) getVar(ctx Context, key, dValue string) string {
+func (this *Script) getValue(ctx Context, key, dValue string) string {
 	var param string
-	//var matches = internal.RegexVar.FindStringSubmatch(key)
 	var idx = strings.IndexByte(key, '|')
 	if idx > -1 {
 		param = key[idx+1:]
 		key = key[0:idx]
 	}
 
-	var varCmd = getVarCommand(key)
-	if varCmd == nil {
+	var valueCmd = getValueCommand(key)
+	if valueCmd == nil {
 		return dValue
 	}
-	return varCmd(this, ctx, param)
+	return valueCmd(this, ctx, param)
 }

@@ -7,10 +7,11 @@ import (
 type CommandParser func(params ...string) ([]interface{}, error)
 type CheckCommand func(script *Script, ctx Context, params ...interface{}) (bool, error)
 type ActionCommand func(script *Script, ctx Context, params ...interface{}) error
-type FormatCommand func(script *Script, ctx Context, param string) string
+type ValueCommand func(script *Script, ctx Context, param string) string
 
 // 解析指令：解析脚本的过程中，用于对各指令进行解析，比如判断参数个数，转换参数类型。
-var commandParsers = make(map[string]CommandParser)
+var checkCommandParsers = make(map[string]CommandParser)
+var actionCommandParsers = make(map[string]CommandParser)
 
 // 判断指令：用于在 #IF 语句块中进行逻辑判断，当其返回的 error 不为空时，该 error 将会返回给调用者。
 var checkCommands = make(map[string]CheckCommand)
@@ -18,8 +19,8 @@ var checkCommands = make(map[string]CheckCommand)
 // 操作指令：用于在 #ACT 和 #ELSEACT 语句块中执行具体的操作，当其返回的 error 不为空时，该 error 将会返回给调用者。
 var actionCommands = make(map[string]ActionCommand)
 
-// 变量指令：用于定义在 #SAY 和 #ELSESAY 语句块输出的动态内容。
-var varCommands = make(map[string]FormatCommand)
+// 值指令：用于定义在 #SAY 和 #ELSESAY 语句块输出的动态内容。
+var valueCommands = make(map[string]ValueCommand)
 
 var defaultCommandParser = func(params ...string) ([]interface{}, error) {
 	var nParams = make([]interface{}, 0, len(params))
@@ -29,31 +30,34 @@ var defaultCommandParser = func(params ...string) ([]interface{}, error) {
 	return nParams, nil
 }
 
-func RegisterCommandParser(name string, f CommandParser) {
+func getCheckCommandParser(name string) CommandParser {
 	name = internal.ToUpper(name)
-
-	if name == "" || f == nil {
-		return
-	}
-	commandParsers[name] = f
-}
-
-func getCommandParser(name string) CommandParser {
-	name = internal.ToUpper(name)
-	var f = commandParsers[name]
+	var f = checkCommandParsers[name]
 	if f == nil {
 		f = defaultCommandParser
 	}
 	return f
 }
 
-func RegisterCheckCommand(name string, f CheckCommand) {
+func getActionCommandParser(name string) CommandParser {
+	name = internal.ToUpper(name)
+	var f = actionCommandParsers[name]
+	if f == nil {
+		f = defaultCommandParser
+	}
+	return f
+}
+
+func RegisterCheckCommand(name string, parser CommandParser, check CheckCommand) {
 	name = internal.ToUpper(name)
 
-	if name == "" || f == nil {
+	if name == "" || check == nil {
 		return
 	}
-	checkCommands[name] = f
+	if parser != nil {
+		checkCommandParsers[name] = parser
+	}
+	checkCommands[name] = check
 }
 
 func getCheckCommand(name string) CheckCommand {
@@ -61,13 +65,16 @@ func getCheckCommand(name string) CheckCommand {
 	return checkCommands[name]
 }
 
-func RegisterActionCommand(name string, f ActionCommand) {
+func RegisterActionCommand(name string, parser CommandParser, action ActionCommand) {
 	name = internal.ToUpper(name)
 
-	if name == "" || f == nil {
+	if name == "" || action == nil {
 		return
 	}
-	actionCommands[name] = f
+	if parser != nil {
+		actionCommandParsers[name] = parser
+	}
+	actionCommands[name] = action
 }
 
 func getActionCommand(name string) ActionCommand {
@@ -75,16 +82,16 @@ func getActionCommand(name string) ActionCommand {
 	return actionCommands[name]
 }
 
-func RegisterVarCommand(name string, f FormatCommand) {
+func RegisterValueCommand(name string, f ValueCommand) {
 	name = internal.ToUpper(name)
 
 	if name == "" || f == nil {
 		return
 	}
-	varCommands[name] = f
+	valueCommands[name] = f
 }
 
-func getVarCommand(name string) FormatCommand {
+func getValueCommand(name string) ValueCommand {
 	name = internal.ToUpper(name)
-	return varCommands[name]
+	return valueCommands[name]
 }
