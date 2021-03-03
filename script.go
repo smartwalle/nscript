@@ -13,15 +13,15 @@ type Script struct {
 }
 
 func NewScript(file string) (*Script, error) {
+	return LoadFromFile(file)
+}
+
+func LoadFromFile(file string) (*Script, error) {
 	var iScript, err = internal.LoadFile(file)
 	if err != nil {
 		return nil, err
 	}
 	return parseScript(iScript)
-}
-
-func LoadFromFile(file string) (*Script, error) {
-	return NewScript(file)
 }
 
 func LoadFromReader(r io.Reader) (*Script, error) {
@@ -69,6 +69,31 @@ func parseFunction(nScript *Script, section *internal.Section) error {
 	}
 	nScript.functions[nFunc.name] = nFunc
 	return nil
+}
+
+func (this *Script) ReloadFromFile(file string) error {
+	var nScript, err = LoadFromFile(file)
+	if err != nil {
+		return err
+	}
+	this.vars = nScript.vars
+	this.functions = nScript.functions
+	return nil
+}
+
+func (this *Script) ReloadFromReader(r io.Reader) error {
+	var nScript, err = LoadFromReader(r)
+	if err != nil {
+		return err
+	}
+	this.vars = nScript.vars
+	this.functions = nScript.functions
+	return nil
+}
+
+func (this *Script) ReloadFromText(text string) error {
+	var r = strings.NewReader(text)
+	return this.ReloadFromReader(r)
 }
 
 func (this *Script) Functions() []string {
