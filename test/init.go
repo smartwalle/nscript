@@ -44,9 +44,9 @@ func parseInt64(v string) int64 {
 
 func init() {
 	// 判断条件
-	nscript.RegisterCheckCommand("CHECKGOLD", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterCheckCommand("CHECKGOLD", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 2 {
-			return nil, errors.New("CHECKGOLD 指令参数异常")
+			return nil, fmt.Errorf("%s 指令参数异常", name)
 		}
 		var nParams = make([]interface{}, len(params))
 		nParams[0] = params[0]
@@ -58,7 +58,7 @@ func init() {
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64(op, nCtx.User.Gold, value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKGENDER", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterCheckCommand("CHECKGENDER", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 1 {
 			return nil, errors.New("CHECKGENDER 指令参数异常")
 		}
@@ -70,7 +70,7 @@ func init() {
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64("=", int64(nCtx.User.Gender), value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKAGE", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterCheckCommand("CHECKAGE", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 2 {
 			return nil, errors.New("CHECKAGE 指令参数异常")
 		}
@@ -84,7 +84,7 @@ func init() {
 		var nCtx = ctx.(*Context)
 		return nscript.CompareInt64(op, nCtx.User.Age, value), nil
 	})
-	nscript.RegisterCheckCommand("CHECKLEVEL", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterCheckCommand("CHECKLEVEL", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 2 {
 			return nil, errors.New("CHECKLEVEL 指令参数异常")
 		}
@@ -100,7 +100,7 @@ func init() {
 	})
 
 	// 操作
-	nscript.RegisterActionCommand("TAKEGOLD", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterActionCommand("TAKEGOLD", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 1 {
 			return nil, errors.New("TAKEGOLD 指令参数异常")
 		}
@@ -116,7 +116,7 @@ func init() {
 		nCtx.User.Gold -= gold
 		return nil
 	})
-	nscript.RegisterActionCommand("SETAGE", func(params ...string) ([]interface{}, error) {
+	nscript.RegisterActionCommand("SETAGE", func(name string, params ...string) ([]interface{}, error) {
 		if len(params) != 1 {
 			return nil, errors.New("SETAGE 指令参数异常")
 		}

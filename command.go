@@ -4,7 +4,7 @@ import (
 	"github.com/smartwalle/nscript/internal"
 )
 
-type CommandParser func(params ...string) ([]interface{}, error)
+type CommandParser func(name string, params ...string) ([]interface{}, error)
 type CheckCommand func(script *Script, ctx Context, params ...interface{}) (bool, error)
 type ActionCommand func(script *Script, ctx Context, params ...interface{}) error
 type ValueCommand func(script *Script, ctx Context, param string) string
@@ -22,7 +22,7 @@ var actionCommands = make(map[string]ActionCommand)
 // 值指令：用于定义在 #SAY 和 #ELSESAY 语句块输出的动态内容。
 var valueCommands = make(map[string]ValueCommand)
 
-var defaultCommandParser = func(params ...string) ([]interface{}, error) {
+var defaultCommandParser = func(name string, params ...string) ([]interface{}, error) {
 	var nParams = make([]interface{}, 0, len(params))
 	for _, param := range params {
 		nParams = append(nParams, param)

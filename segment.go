@@ -83,7 +83,7 @@ func (this *inSegment) parseCheck(line string) error {
 	}
 
 	var cmdParser = getCheckCommandParser(name)
-	nParams, err := cmdParser(params...)
+	nParams, err := cmdParser(name, params...)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (this *inSegment) _parseAction(line string) (*inAction, error) {
 	}
 
 	var cmdParser = getActionCommandParser(name)
-	nParams, err := cmdParser(params...)
+	nParams, err := cmdParser(name, params...)
 	if err != nil {
 		return nil, err
 	}
