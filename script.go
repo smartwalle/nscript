@@ -179,13 +179,13 @@ func (this *Script) getValue(ctx Context, key, dValue string) string {
 
 func (this *Script) Format(ctx Context, texts []string) []string {
 	var nTexts = make([]string, 0, len(texts))
-	for _, say := range texts {
-		var nSay = internal.RegexFormat.ReplaceAllStringFunc(say, func(s string) string {
+	for _, text := range texts {
+		var nText = internal.RegexFormat.ReplaceAllStringFunc(text, func(s string) string {
+			// 匹配到的内容为 <$PARAM>，需要去掉 <> 符号，所以做一次字符串截取
 			var key = s[1 : len(s)-1]
-
 			return this.getValue(ctx, key, s)
 		})
-		nTexts = append(nTexts, nSay)
+		nTexts = append(nTexts, nText)
 	}
 	return nTexts
 }
