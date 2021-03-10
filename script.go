@@ -176,3 +176,16 @@ func (this *Script) getValue(ctx Context, key, dValue string) string {
 	}
 	return valueCmd(this, ctx, param)
 }
+
+func (this *Script) Format(ctx Context, texts []string) []string {
+	var nTexts = make([]string, 0, len(texts))
+	for _, say := range texts {
+		var nSay = internal.RegexFormat.ReplaceAllStringFunc(say, func(s string) string {
+			var key = s[1 : len(s)-1]
+
+			return this.getValue(ctx, key, s)
+		})
+		nTexts = append(nTexts, nSay)
+	}
+	return nTexts
+}
