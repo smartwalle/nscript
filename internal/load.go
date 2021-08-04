@@ -9,22 +9,22 @@ import (
 )
 
 var (
-	// 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
+	// RegexInclude 从字符串 "#INCLUDE [dir1/dir2/file.txt] @SECTION_1" 中提取出 "dir1/dir2/file.txt" 和 "@SECTION_1"
 	RegexInclude = regexp.MustCompile(`#INCLUDE\s*\[([^\n]+)\]\s*(@[^\n]+)`)
 
-	// 从字符串 "#INSERT [dir1/dir2/file.txt]" 中提取出 "dir1/dir2/file.txt"
+	// RegexInsert 从字符串 "#INSERT [dir1/dir2/file.txt]" 中提取出 "dir1/dir2/file.txt"
 	RegexInsert = regexp.MustCompile(`#INSERT\s*\[([^\n]+)\]\s*$`)
 
-	// 从字符串 "[@MAIN]" 中提取出 "@MAIN"
+	// RegexFunctionName 从字符串 "[@MAIN]" 中提取出 "@MAIN"
 	RegexFunctionName = regexp.MustCompile(`^\[([^\n]+)\]\s*$`)
 
-	// 从字符串 "(PARAM)" 中提取出 "PARAM"
+	// RegexFunctionParam 从字符串 "(PARAM)" 中提取出 "PARAM"
 	//RegexFunctionParam = regexp.MustCompile(`\(([\S]+)\)`)
 
-	// 从字符串 "<$PARAM>" 中提取出 "$PARAM"
+	// RegexFormat 从字符串 "<$PARAM>" 中提取出 "$PARAM"
 	RegexFormat = regexp.MustCompile(`\<(\$[^<>]+)\>`)
 
-	// 从字符串 "$KEY(PARAM)" 中提取出 "$KEY" 和 PARAM
+	// RegexVar 从字符串 "$KEY(PARAM)" 中提取出 "$KEY" 和 PARAM
 	//RegexVar = regexp.MustCompile(`(\$[^\(\)]+)\((\S+)\)`)
 )
 
